@@ -1,39 +1,10 @@
-/* index.html 的 link → GET /static/styles.css → main.py 挂载的 static 目录。 */
-:root { color-scheme: light; font-family: system-ui, "Microsoft YaHei", sans-serif; color: #223b37; background: #f3f5ef; }
-* { box-sizing: border-box; }
-body { max-width: 1100px; margin: auto; padding: 40px 28px; }
-header { margin-bottom: 32px; }
-.eyebrow, .number { color: #4d7764; font-size: 12px; letter-spacing: 2px; }
-h1 { margin: 12px 0; font-size: clamp(28px, 5vw, 42px); }
-h2 { margin: 12px 0; font-size: 21px; }
-p { line-height: 1.75; }
-.site-name { color: #607268; font-size: 14px; }
-main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-section { padding: 26px; background: #fff; border: 1px solid #dce4d9; border-radius: 14px; min-width: 0; }
-.echo-section { grid-column: 1 / -1; }
-.mapping { padding-top: 16px; border-top: 1px solid #e7ece4; color: #607268; font-family: ui-monospace, monospace; font-size: 12px; overflow-wrap: anywhere; }
-a { color: #21644e; text-underline-offset: 4px; }
-.portraits { display: flex; flex-wrap: wrap; gap: 32px; }
-figure { margin: 8px 0 16px; text-align: center; }
-figcaption { margin-top: 8px; font-size: 13px; }
-img { display: block; margin: auto; }
-label { display: block; margin: 16px 0 10px; font-size: 14px; }
-.input-row { display: flex; gap: 12px; }
-input, button, .button-link { font: inherit; border-radius: 8px; }
-input { min-width: 0; flex: 1; padding: 12px; border: 1px solid #b9cdbf; }
-button, .button-link { padding: 11px 16px; border: 1px solid #23664c; background: #23664c; color: white; }
-button { cursor: pointer; white-space: nowrap; }
-button:disabled { opacity: .55; cursor: wait; }
-.button-link { display: inline-block; text-decoration: none; }
-button:hover, .button-link:hover { background: #194e3a; }
-:focus-visible { outline: 3px solid #79b794; outline-offset: 3px; }
-pre { min-height: 82px; padding: 18px; background: #eef3ed; border-radius: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
-#request-status { font-size: 14px; color: #526b5c; }
-footer { padding-top: 28px; text-align: center; color: #607268; font-size: 13px; }
-/* 窄屏时只改变布局；URL 和请求调用关系保持一致。 */
-@media (max-width: 700px) {
-  body { padding: 24px 16px; }
-  main { grid-template-columns: 1fr; }
-  section { padding: 22px; }
-  .input-row { flex-direction: column; }
-}
+:root{color-scheme:light;--ink:#233c35;--muted:#66766e;--accent:#24654b;--line:#dfe5dc;--paper:#fafbf7;font-family:system-ui,"Microsoft YaHei",sans-serif;background:#f2f4ed;color:var(--ink)}
+*{box-sizing:border-box}body{margin:0}a{color:var(--accent);text-underline-offset:4px}button,input,textarea,select{font:inherit}button,.small-button{border:0;background:var(--accent);color:white;border-radius:7px;padding:11px 18px;cursor:pointer;text-decoration:none}button:disabled{opacity:.45;cursor:default}button.secondary{background:#eaf0e6;color:var(--ink)}button.text-button{background:none;color:var(--accent);padding:8px;font-size:12px}button:hover:not(:disabled){filter:brightness(.92)}
+.topbar{max-width:1240px;margin:auto;padding:23px 30px;display:flex;align-items:center;gap:30px;border-bottom:1px solid var(--line)}.brand{font-weight:700;font-size:18px;text-decoration:none;white-space:nowrap}.brand-icon{display:inline-grid;place-items:center;width:30px;height:30px;background:var(--accent);color:white;border-radius:7px;margin-right:8px}nav{display:flex;gap:22px;margin-left:auto}nav a{text-decoration:none;font-size:14px}#user-nav{display:flex;align-items:center;gap:14px;font-size:14px}#user-nav button{padding:7px 10px}
+main{max-width:1180px;margin:auto;padding:0 24px;min-height:70vh}.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:54px;align-items:center;padding:65px 0 45px}.eyebrow{letter-spacing:2px;font-size:11px;color:#66806b;font-weight:600;margin:0 0 14px}h1{font-size:clamp(30px,4vw,46px);line-height:1.35;letter-spacing:-1px;margin:0 0 20px}h2{font-size:23px;margin:0 0 8px}h3{font-size:18px}.lead{color:var(--muted);line-height:1.9;max-width:620px;font-size:15px}.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.badges span{border:1px solid #d3dfce;border-radius:20px;padding:5px 11px;font-size:12px;color:#4e7258}
+.code-card{background:#233e34;color:#e9f0df;border-radius:12px;padding:25px;min-width:0}.code-label{font-size:12px;color:#a6c3a4;display:flex;justify-content:space-between}.code-card pre{background:none;padding:0;margin:28px 0;line-height:1.9;font-size:12px}.code-card a{color:#bed7af;font-size:13px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:24px}.section-heading,.form-bottom,.result-heading,.pagination{display:flex;gap:16px;align-items:center;justify-content:space-between}.section-heading{margin-bottom:20px}.muted{color:var(--muted);font-size:13px}.hint{color:var(--muted);font-size:12px;line-height:1.8}.notice{padding:14px;background:#eef1e4;border-radius:6px;font-size:13px;line-height:1.8}
+label{display:block;font-size:13px;margin:14px 0 9px}textarea,input,select{border:1px solid #cbd7c6;background:white;color:var(--ink);border-radius:7px;padding:12px;width:100%;min-width:0}textarea{resize:vertical;line-height:1.7}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #8eb391;outline-offset:3px}pre{background:#edf1e7;border-radius:6px;padding:18px;overflow:auto;line-height:1.7}code{font-size:.9em;font-family:ui-monospace,Consolas,monospace}p code,li code{background:#edf1e7;padding:2px 5px;border-radius:4px}#ask-status,#chat-status,#auth-status,#account-status{font-size:13px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere}.plain-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9}.answer{border-top:1px solid var(--line);padding-top:20px;margin-top:20px}details{border-top:1px solid var(--line);padding:16px 0}summary{cursor:pointer;line-height:1.7;font-size:14px}details p{font-size:13px}
+.readme-section{padding:42px 0 20px}.markdown{font-size:14px;line-height:1.9;overflow-wrap:anywhere}.markdown h1{font-size:28px;letter-spacing:0}.markdown h2{font-size:22px;margin-top:30px}.markdown h3{margin-top:25px}.markdown table{display:block;overflow:auto;border-collapse:collapse}.markdown td,.markdown th{border:1px solid var(--line);padding:8px 12px;text-align:left}.markdown img{max-width:100%}.page-heading{padding:50px 0 20px}.guide-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(330px,1fr);gap:24px;align-items:start}.chat-panel{position:sticky;top:18px}.chat-panel h2{font-size:20px}.chat-tools{display:flex;justify-content:space-between}.messages{height:350px;overflow:auto;padding:14px 0;margin-top:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.message{padding:12px 14px;border-radius:8px;margin-bottom:12px;background:#edf2e7;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}.message.assistant{background:#f0f1ed}.message.failed{border:1px solid #d6a88c}.message-label{font-size:11px;font-weight:700;display:block;margin-bottom:6px;color:#66806b}.empty-state{color:var(--muted);font-size:13px;padding:20px}.auth-panel{max-width:460px;margin:60px auto}.auth-panel h1{font-size:30px}.auth-panel button{width:100%;margin-top:20px}.auth-panel>a{font-size:13px}.pagination{padding-top:20px;font-size:13px}
+footer{max-width:1180px;margin:20px auto 0;padding:26px 24px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:15px}
+@media(max-width:850px){.topbar{flex-wrap:wrap;padding:18px 22px;gap:18px}nav{order:3;width:100%;margin:0;justify-content:space-between;gap:10px}#user-nav{margin-left:auto}.hero{grid-template-columns:1fr;gap:25px;padding:40px 0}.guide-grid{grid-template-columns:1fr}.chat-panel{position:static}.section-heading,.form-bottom{align-items:flex-start;flex-wrap:wrap}.panel{padding:22px}footer{flex-wrap:wrap}}
+

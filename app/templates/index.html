@@ -1,79 +1,32 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FastAPI 响应方式练习</title>
-    <!-- url_for 按注册名称寻找地址；static 对应 main.py 中的静态目录挂载。 -->
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css').path }}">
-    <script src="{{ url_for('static', path='/app.js').path }}" defer></script>
-  </head>
-  <body>
-    <header>
-      <p class="eyebrow">FASTAPI LEARNING LAB</p>
-      <h1>一次请求，几种响应</h1>
-      <p>先看页面，再顺着地址找到负责它的代码。</p>
-      <!-- /demo?name=小明 → demo_page() 的 name → context → 此处的 {{ name }}。 -->
-      <p class="site-name">你好，<strong>{{ name }}</strong>。这是 Python 传给模板的名字。</p>
-    </header>
-    <main>
-      <section aria-labelledby="template-title">
-        <span class="number">01 / TEMPLATE</span>
-        <h2 id="template-title">当前页面就是模板渲染的结果</h2>
-        <p>试着在地址后加上 ?name=小明，观察模板中的名字变化。</p>
-        <p class="mapping">GET /demo → pages/routes.py → templates/index.html</p>
-      </section>
-      <section aria-labelledby="static-title">
-        <span class="number">02 / STATIC FILES</span>
-        <h2 id="static-title">一个目录映射，多份静态文件</h2>
-        <p>图片、样式和脚本分别发起请求，按路径读取对应文件。</p>
-        <div class="portraits">
-          <figure>
-            <!-- /static/images/user.svg → app/static/images/user.svg；SVG 是占位图片。 -->
-            <img src="{{ url_for('static', path='/images/user.svg').path }}" alt="学习者占位头像" width="88" height="88">
-            <figcaption><a href="{{ url_for('static', path='/images/user.svg').path }}">打开 user.svg ↗</a></figcaption>
-          </figure>
-          <figure>
-            <!-- 只改相对路径即可读取另一张图片，不需要再写 Python 路由。 -->
-            <img src="{{ url_for('static', path='/images/assistant.svg').path }}" alt="助手占位头像" width="88" height="88">
-            <figcaption><a href="{{ url_for('static', path='/images/assistant.svg').path }}">打开 assistant.svg ↗</a></figcaption>
-          </figure>
-        </div>
-        <p class="mapping">GET /static/… → main.py 的 StaticFiles → static/…</p>
-      </section>
-      <section class="echo-section" aria-labelledby="json-title">
-        <span class="number">03 / JSON API</span>
-        <h2 id="json-title">发送 JSON，局部更新页面</h2>
-        <p>输入一段文字，接口原样返回，并给出 Python 计算的字符数。</p>
-        <!-- echo 是 api/routes/examples.py 的函数名；把地址交给 app.js，避免重复拼 URL。 -->
-        <form id="echo-form" data-endpoint="{{ url_for('echo').path }}">
-          <label for="message">发送内容（1–200 个字符）</label>
-          <div class="input-row">
-            <input id="message" name="message" value="你好，FastAPI" required maxlength="200">
-            <button type="submit" id="send">发送请求</button>
-          </div>
-        </form>
-        <p id="request-status" role="status" aria-live="polite">等待发送。</p>
-        <pre id="result" aria-label="JSON 响应结果">响应会显示在这里。</pre>
-        <p class="mapping">app.js → POST /examples/echo → EchoRequest → echo() → JSON → app.js</p>
-      </section>
-      <section aria-labelledby="html-title">
-        <span class="number">04 / HTML RESPONSE</span>
-        <h2 id="html-title">直接返回 HTML</h2>
-        <p>另一种 HTML 来源：Python 函数直接返回一段 HTML 字符串。</p>
-        <!-- plain_html 是 pages/routes.py 中的函数名，url_for 根据名字查找注册路径。 -->
-        <a class="button-link" href="{{ url_for('plain_html').path }}">查看直接 HTML 页面 →</a>
-        <p class="mapping">GET /demo/html → plain_html() → HTMLResponse</p>
-      </section>
-      <section aria-labelledby="file-title">
-        <span class="number">05 / FILE RESPONSE</span>
-        <h2 id="file-title">下载一个指定文件</h2>
-        <p>接口读取一份固定的 UTF-8 文本文件，以附件形式发送。</p>
-        <!-- 浏览器的下载行为由 download_map() 响应中的附件头决定。 -->
-        <a class="button-link" href="{{ url_for('download_map').path }}">下载调用映射说明 ↓</a>
-        <p class="mapping">GET /demo/download → download_map() → resources/request-map.txt</p>
-      </section>
-    </main>
-    <footer><a href="/docs">接口文档</a> · <a href="/">应用信息 JSON</a> · 本轮演示不调用 RAG</footer>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block scripts %}<script src="{{ url_for('static', path='/home.js').path }}" defer></script>{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">STUDENT HANDBOOK / OPEN API</p><h1>把手册里的规定，<br>变成有依据的回答。</h1>
+    <p class="lead">输入一个问题，查询学生手册中的条款。每次问答独立处理，返回原文引用和 PDF 页码。</p>
+    <div class="badges"><span>公开接口</span><span>无需 API Key</span><span>来源可追溯</span></div>
+  </div>
+  <aside class="code-card"><div class="code-label">一次请求，一份回答 <span>POST</span></div>
+    <pre>curl -X POST /api/rag/ask \
+  -H 'Content-Type: application/json' \
+  --max-time 210 \
+  -d '{"question":"国家奖学金的申请条件？"}'</pre>
+    <a href="/docs">查看完整接口与返回字段 →</a>
+  </aside>
+</section>
+<section class="panel" id="playground">
+  <div class="section-heading"><div><p class="eyebrow">PLAYGROUND</p><h2>直接试一问</h2></div><span class="muted">和外部调用使用同一个接口</span></div>
+  <form id="ask-form">
+    <label for="question">你的问题</label>
+    <textarea id="question" maxlength="500" rows="3" required placeholder="例如：申请国家奖学金需要满足哪些条件？"></textarea>
+    <div class="form-bottom"><p class="hint">通常需要约 20 秒，复杂问题可能更久。匿名使用不保存个人历史。</p><button id="ask-button" {% if not rag_enabled %}disabled{% endif %}>提交问题 ↗</button></div>
+  </form>
+  <p id="ask-status" role="status">{% if not rag_enabled %}页面已就绪，问答接口尚未接通。{% endif %}</p>
+  <article id="answer" class="answer" hidden><div class="result-heading"><h3>回答</h3><span id="answer-meta" class="muted"></span></div><div id="answer-text" class="plain-text"></div><div id="answer-warnings" class="notice" hidden></div><div id="sources"></div></article>
+</section>
+<section class="readme-section"><div class="section-heading"><div><p class="eyebrow">ABOUT THE PROJECT</p><h2>项目说明</h2></div><a href="{{ repository }}">在 GitHub 查看 ↗</a></div>
+  <!-- services/knowledge.py 读取公开 README → Markdown 渲染（禁用原始 HTML）→ 此处展示。 -->
+  <article class="markdown panel">{{ readme_html | safe }}</article>
+</section>
+{% endblock %}
+

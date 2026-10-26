@@ -12,15 +12,9 @@ APP_DIR = Path(__file__).resolve().parent
 app = FastAPI()
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    # GET / → 本函数 → 返回 JSON；这些地址是提示文字，不会自动跳转。
-    return {"message": "你好，FastAPI", "demo": "/demo", "docs": "/docs"}
-
-
-# API 注册：api/router.py → api/routes/examples.py 的 echo() 等函数。
+# API 注册：api/router.py → 各主题 JSON 路由。
 app.include_router(api_router)
-# 页面注册：pages/routes.py → 模板、直接 HTML、文件下载三个示例。
+# 页面注册：pages/routes.py → 首页、安装教程、账号页面。
 app.include_router(page_router)
 # /static/images/user.svg → app/static/images/user.svg；同样适用于 CSS 和 JS。
 app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ "注册" if register else "登录" }}{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='/auth.js').path }}" defer></script>{% endblock %}
+{% block content %}
+<section class="panel auth-panel"><p class="eyebrow">YOUR WORKSPACE</p><h1>{{ "创建账号" if register else "欢迎回来" }}</h1><p class="muted">登录后保存问答记录，继续安装助手的历史对话。公开问答无需登录。</p>
+<form id="auth-form" data-mode="{{ 'register' if register else 'login' }}">
+  <label for="username">用户名</label><input id="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_]+" required>
+  <p class="hint">3–32 位英文字母、数字或下划线。</p>
+  <label for="password">密码</label><input id="password" type="password" autocomplete="{{ 'new-password' if register else 'current-password' }}" minlength="8" maxlength="128" required><p class="hint">8–128 个字符。</p>
+  <button id="auth-submit" {% if not auth_enabled %}disabled{% endif %}>{{ "注册并登录" if register else "登录" }}</button>
+</form><p id="auth-status" role="status">{% if not auth_enabled %}账号功能尚未接通。{% endif %}</p>
+<a href="{{ '/login' if register else '/register' }}">{{ "已有账号？去登录" if register else "没有账号？去注册" }}</a></section>
+{% endblock %}
+

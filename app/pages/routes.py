@@ -3,44 +3,46 @@
 from pathlib import Path
 
 from fastapi import APIRouter, Request
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+from app.services.knowledge import page_knowledge
 
 APP_DIR = Path(__file__).resolve().parents[1]
 # 这里只指定模板目录；创建 Templates 对象时不会把 HTML 发给浏览器。
 templates = Jinja2Templates(directory=APP_DIR / "templates")
-router = APIRouter(prefix="/demo", tags=["response demos"])
+router = APIRouter(include_in_schema=False)
 
 
-@router.get("", response_class=HTMLResponse)
-def demo_page(request: Request, name: str = "学习者") -> HTMLResponse:
-    # GET /demo → 本函数 → templates/index.html；context 是 Python 传给模板的数据。
-    # /demo?name=小明 → name 参数 → context → 模板中的 {{ name }}。
+@router.get("/", response_class=HTMLResponse)
+def home(request: Request) -> HTMLResponse:
+    # GET / → 原 RAG README → index.html；提问通过独立的 JSON API 发送。
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"name": name},
+        context={**page_knowledge(), "rag_enabled": False},
     )
 
 
-@router.get("/html", response_class=HTMLResponse)
-def plain_html() -> HTMLResponse:
-    # GET /demo/html → 本函数 → 直接返回 HTML 字符串，不读取任何模板文件。
-    # HTMLResponse 设置 text/html；若普通返回一个 str，默认会成为 JSON 字符串。
-    return HTMLResponse(
-        "<!doctype html><html lang='zh-CN'><meta charset='utf-8'>"
-        "<title>直接 HTML 响应</title><h1>这是 HTMLResponse</h1>"
-        "<p>这段 HTML 来自 app/pages/routes.py 的 plain_html()，没有经过模板。</p>"
-        "<p><a href='/demo'>返回演示页</a></p></html>"
+@router.get("/guide", response_class=HTMLResponse)
+def guide(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request, name="guide.html", context={**page_knowledge(), "assistant_enabled": False}
     )
 
 
-@router.get("/download", response_class=FileResponse)
-def download_map() -> FileResponse:
-    # GET /demo/download → 本函数 → 读取 app/resources/request-map.txt。
-    # filename 让响应成为带文件名的附件；文件路径固定，不接受任意磁盘路径输入。
-    return FileResponse(
-        path=APP_DIR / "resources" / "request-map.txt",
-        media_type="text/plain; charset=utf-8",
-        filename="request-map.txt",
+@router.get("/login", response_class=HTMLResponse)
+@router.get("/register", response_class=HTMLResponse)
+def authentication(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request,
+        name="auth.html",
+        context={"register": request.url.path == "/register", "auth_enabled": False},
+    )
+
+
+@router.get("/account", response_class=HTMLResponse)
+def account(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request, name="account.html", context={"auth_enabled": False}
     )
