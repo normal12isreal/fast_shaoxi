@@ -1,0 +1,21 @@
+# Project-local runtimes, tools, and downloaded dependencies
+.runtime/
+.tools/
+.venv/
+.uv-cache/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Local configuration and future database files
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.sqlite3
+*.log
+dist/
+build/
+*.egg-info/
