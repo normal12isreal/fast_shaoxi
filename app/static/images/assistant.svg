@@ -1,0 +1,11 @@
+<!-- GET /static/images/assistant.svg → 与 user.svg 共用同一次目录挂载。 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" viewBox="0 0 88 88">
+  <title>助手占位头像</title>
+  <rect width="88" height="88" rx="24" fill="#e2ebf1"/>
+  <rect x="20" y="26" width="48" height="38" rx="12" fill="#47748a"/>
+  <path d="M44 18v8M35 54h18" stroke="#47748a" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="44" cy="16" r="4" fill="#47748a"/>
+  <circle cx="34" cy="42" r="4" fill="white"/>
+  <circle cx="54" cy="42" r="4" fill="white"/>
+  <path d="M36 54h16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+</svg>

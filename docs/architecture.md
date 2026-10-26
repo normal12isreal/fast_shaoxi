@@ -9,6 +9,10 @@ app/
   api/router.py        汇总 HTTP 路由
   api/routes/          health 与学习示例
   schemas/             请求与响应模型
+  pages/routes.py      页面 URL → 模板、直接 HTML 或下载响应
+  templates/           Jinja2 模板，接收 Python 传入的页面数据
+  static/              浏览器端 JavaScript、CSS、SVG 占位图片
+  resources/           由指定下载路由提供的文件，不挂载到静态目录
 tests/                 对外行为测试
 scripts/               本地工具与开发启动
 docs/                  环境、架构、学习及服务器说明
@@ -21,6 +25,10 @@ docs/                  环境、架构、学习及服务器说明
 
 目前没有持久化数据，也没有跨请求共享的业务状态。配置在创建应用时读取；
 `create_app(settings)` 允许测试明确注入配置，避免依赖个人 `.env`。
+`main.py` 将配置放入 `app.state.settings`，页面路由据此填充网站名称。
+
+页面、资源与 API 是独立请求。调用映射及阅读顺序见 [网页响应练习](web-demo.md)。
+当前只使用 echo 演示数据传输，尚未对接外部 RAG 包。
 
 ## 有需求时再增加的模块
 

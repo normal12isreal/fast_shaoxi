@@ -5,6 +5,9 @@
 - `main.py`：应用创建、路由组装和根接口；不堆业务逻辑。
 - `core/config.py`：环境配置和默认值；新增配置同步 `.env.example` 与环境说明。
 - `api/router.py`：汇总路由；`api/routes/` 中每个文件负责一个明确主题。
+- 页面与文件响应见 [pages/AGENTS.md](pages/AGENTS.md)。`templates/` 负责 HTML 模板，
+  `static/` 负责浏览器脚本、样式与图片，`resources/` 保存固定下载文件。
+- 静态目录挂载在 `main.py`；保持 URL、函数、文件映射的中文注释与实现同步。
 - `schemas/`：请求、响应及字段约束。业务规则出现后放入对应 service，不藏在 schema 中。
 - FastAPI 的 OpenAPI 是 HTTP 契约的直接展示；新增行为在 `tests/` 中验证，不手工复制整套接口清单。
 - 尚无数据库层；需要持久化时按架构文档新增 `app/db/`，不要直接在路由里拼 SQL。

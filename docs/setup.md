@@ -32,6 +32,7 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
 - Uvicorn：运行 ASGI 应用的服务器；standard 扩展支持开发热重载。
 - Pydantic：请求、响应模型及数据校验。
 - pydantic-settings：从环境变量和 `.env` 读取配置。
+- Jinja2：将 `app/templates/` 中的 HTML 模板与页面数据合成为 HTML 响应。
 - pytest、HTTPX2：测试运行器与内存中的 HTTP 接口测试。当前 Starlette TestClient
   使用 [HTTPX2](https://starlette.dev/testclient/)。
 - Ruff：基础代码检查与格式化。

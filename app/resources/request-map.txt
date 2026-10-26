@@ -1,0 +1,14 @@
+FastAPI 响应方式练习
+
+本文件通过 GET /demo/download 下载。
+调用：app/pages/routes.py 的 download_map() → FileResponse → 本文件。
+
+其他调用映射：
+1. GET /demo → demo_page() → templates/index.html → 渲染后的 HTML。
+2. GET /static/images/user.svg → main.py 的 StaticFiles → static/images/user.svg。
+3. GET /static/images/assistant.svg → 同一次目录挂载 → 对应 SVG 文件。
+4. POST /examples/echo → EchoRequest 校验 → examples.echo() → JSON。
+5. GET /demo/html → plain_html() → 直接生成的 HTML 字符串。
+
+浏览器端：index.html 引用 app.js → fetch 发送 JSON → 更新页面里的结果文本。
+本轮不连接 RAG，不调用模型，不保存问答数据。

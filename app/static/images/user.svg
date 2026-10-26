@@ -1,0 +1,7 @@
+<!-- GET /static/images/user.svg → main.py 的 StaticFiles → 本文件；无需独立路由。 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" viewBox="0 0 88 88">
+  <title>学习者占位头像</title>
+  <rect width="88" height="88" rx="24" fill="#e7eedf"/>
+  <circle cx="44" cy="32" r="13" fill="#537955"/>
+  <path d="M20 72c0-17 11-25 24-25s24 8 24 25" fill="#537955"/>
+</svg>
