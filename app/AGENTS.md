@@ -2,8 +2,8 @@
 
 修改前按需读取 [架构说明](../docs/architecture.md)。
 
-- `main.py`：应用创建、路由组装和根接口；不堆业务逻辑。
-- `core/config.py`：环境配置和默认值；新增配置同步 `.env.example` 与环境说明。
+- `main.py`：直接用 `app = FastAPI()` 创建应用，再注册路由与静态目录。
+- 当前以学习响应方式为主；保留可运行示例，避免加入无实际用途的配置层与工厂。
 - `api/router.py`：汇总路由；`api/routes/` 中每个文件负责一个明确主题。
 - 页面与文件响应见 [pages/AGENTS.md](pages/AGENTS.md)。`templates/` 负责 HTML 模板，
   `static/` 负责浏览器脚本、样式与图片，`resources/` 保存固定下载文件。

@@ -2,25 +2,19 @@
 
 from pathlib import Path
 
-from fastapi.testclient import TestClient
 
-from app.main import create_app
-
-
-def test_template_renders_configuration_and_route_urls(client):
-    response = client.get("/demo")
+def test_template_renders_name_and_route_urls(client):
+    response = client.get("/demo", params={"name": "小明"})
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert "Test Learning Lab" in response.text
-    assert "{{ app_name }}" not in response.text
+    assert "<strong>小明</strong>" in response.text
+    assert "<strong>学习者</strong>" in client.get("/demo").text
     assert 'data-endpoint="/examples/echo"' in response.text
     assert 'src="/static/images/user.svg"' in response.text
 
 
-def test_template_escapes_configuration(client):
-    settings = client.app.state.settings.model_copy(update={"app_name": "<script>bad()</script>"})
-    with TestClient(create_app(settings)) as other_client:
-        html = other_client.get("/demo").text
+def test_template_escapes_name(client):
+    html = client.get("/demo", params={"name": "<script>bad()</script>"}).text
     assert "<script>bad()</script>" not in html
     assert "&lt;script&gt;bad()&lt;/script&gt;" in html
 

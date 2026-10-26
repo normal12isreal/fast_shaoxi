@@ -28,7 +28,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1
 
 | 接口 | 用途 |
 |---|---|
-| `GET /` | 查看应用名称、环境和文档入口 |
+| `GET /` | 返回简单 JSON，包含演示页和文档地址 |
 | `GET /health` | 确认应用能响应；目前不检查数据库 |
 | `POST /examples/echo` | 发送 `{"message":"你好"}`，观察类型校验和响应模型 |
 | `GET /docs` | FastAPI 自动生成的交互接口文档 |
@@ -36,6 +36,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1
 | `GET /static/...` | 按相对路径提供图片、CSS 和 JavaScript |
 | `GET /demo/html` | 直接返回 HTML 字符串 |
 | `GET /demo/download` | 下载固定的调用映射文本文件 |
+
+模板传值可以直接访问 `/demo?name=小明`，观察名字怎样进入页面。
 
 建议先读 [网页响应练习](docs/web-demo.md)，再对照代码中的中文调用映射注释。
 

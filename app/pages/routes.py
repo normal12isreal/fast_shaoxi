@@ -13,13 +13,13 @@ router = APIRouter(prefix="/demo", tags=["response demos"])
 
 
 @router.get("", response_class=HTMLResponse)
-def demo_page(request: Request) -> HTMLResponse:
+def demo_page(request: Request, name: str = "学习者") -> HTMLResponse:
     # GET /demo → 本函数 → templates/index.html；context 是 Python 传给模板的数据。
-    # Jinja2 将 {{ app_name }} 等表达式填成实际文本，浏览器收到的是渲染后的 HTML。
+    # /demo?name=小明 → name 参数 → context → 模板中的 {{ name }}。
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"app_name": request.app.state.settings.app_name},
+        context={"name": name},
     )
 
 

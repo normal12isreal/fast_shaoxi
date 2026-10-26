@@ -5,7 +5,6 @@
 ```text
 app/
   main.py              创建 FastAPI 应用、装配路由
-  core/config.py       环境配置的唯一读取入口
   api/router.py        汇总 HTTP 路由
   api/routes/          health 与学习示例
   schemas/             请求与响应模型
@@ -23,9 +22,9 @@ docs/                  环境、架构、学习及服务器说明
 例如 `POST /examples/echo` 的输入输出在 `app/schemas/examples.py`，处理在
 `app/api/routes/examples.py`。字符串长度按 Python `len` 计算。
 
-目前没有持久化数据，也没有跨请求共享的业务状态。配置在创建应用时读取；
-`create_app(settings)` 允许测试明确注入配置，避免依赖个人 `.env`。
-`main.py` 将配置放入 `app.state.settings`，页面路由据此填充网站名称。
+`main.py` 直接用 `app = FastAPI()` 创建应用，然后注册路由与静态目录。
+当前没有配置层、应用工厂或持久化数据；测试直接使用这个 app。
+模板练习用 `/demo?name=小明` 展示查询参数 → 函数参数 → 模板变量的关系。
 
 页面、资源与 API 是独立请求。调用映射及阅读顺序见 [网页响应练习](web-demo.md)。
 当前只使用 echo 演示数据传输，尚未对接外部 RAG 包。
@@ -47,6 +46,6 @@ ORM 模型与 HTTP schema 各自维护边界，不把数据库内部字段直接
 ## 变更时维护什么
 
 新增接口时更新路由、必要 schema 与行为测试；只有导航或模块责任变化才改本文。
-新增配置时更新 `config.py`、`.env.example` 和环境说明。
+真正需要配置时再添加，并同步环境说明；不要为演示页面标题引入配置模块。
 新增模块时提供简短职责说明，只有出现新的维护边界才增加局部 `AGENTS.md`。
 不为了目录齐全预建空的 service、repository、数据库或部署框架。

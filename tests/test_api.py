@@ -1,12 +1,12 @@
 import pytest
 
 
-def test_root_uses_application_configuration(client):
+def test_root_returns_json(client):
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {
-        "name": "Test Learning Lab",
-        "environment": "test",
+        "message": "你好，FastAPI",
+        "demo": "/demo",
         "docs": "/docs",
     }
 
@@ -35,5 +35,4 @@ def test_openapi_describes_the_example(client):
     response = client.get("/openapi.json")
     assert response.status_code == 200
     schema = response.json()
-    assert schema["info"]["title"] == "Test Learning Lab"
     assert "post" in schema["paths"]["/examples/echo"]

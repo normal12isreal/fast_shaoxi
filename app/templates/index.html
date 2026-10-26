@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- pages/routes.py 的 context.app_name → Jinja2 填入这里 → 浏览器标题。 -->
-    <title>响应方式练习 · {{ app_name }}</title>
+    <title>FastAPI 响应方式练习</title>
     <!-- url_for 按注册名称寻找地址；static 对应 main.py 中的静态目录挂载。 -->
     <link rel="stylesheet" href="{{ url_for('static', path='/styles.css').path }}">
     <script src="{{ url_for('static', path='/app.js').path }}" defer></script>
@@ -14,13 +13,14 @@
       <p class="eyebrow">FASTAPI LEARNING LAB</p>
       <h1>一次请求，几种响应</h1>
       <p>先看页面，再顺着地址找到负责它的代码。</p>
-      <p class="site-name">模板传入的网站名称：<strong>{{ app_name }}</strong></p>
+      <!-- /demo?name=小明 → demo_page() 的 name → context → 此处的 {{ name }}。 -->
+      <p class="site-name">你好，<strong>{{ name }}</strong>。这是 Python 传给模板的名字。</p>
     </header>
     <main>
       <section aria-labelledby="template-title">
         <span class="number">01 / TEMPLATE</span>
         <h2 id="template-title">当前页面就是模板渲染的结果</h2>
-        <p>Python 将网站名称填进 HTML，浏览器收到的是完整页面。</p>
+        <p>试着在地址后加上 ?name=小明，观察模板中的名字变化。</p>
         <p class="mapping">GET /demo → pages/routes.py → templates/index.html</p>
       </section>
       <section aria-labelledby="static-title">

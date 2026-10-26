@@ -31,7 +31,6 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
 - FastAPI：HTTP 路由和自动接口文档。
 - Uvicorn：运行 ASGI 应用的服务器；standard 扩展支持开发热重载。
 - Pydantic：请求、响应模型及数据校验。
-- pydantic-settings：从环境变量和 `.env` 读取配置。
 - Jinja2：将 `app/templates/` 中的 HTML 模板与页面数据合成为 HTML 响应。
 - pytest、HTTPX2：测试运行器与内存中的 HTTP 接口测试。当前 Starlette TestClient
   使用 [HTTPX2](https://starlette.dev/testclient/)。
@@ -39,17 +38,10 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
 
 数据库阶段再按需求添加 SQLAlchemy、Alembic 和相应驱动，当前不安装远程数据库服务。
 
-## 可选配置
+## 当前不需要配置文件
 
-默认配置已经可以运行。需要覆盖时：
-
-```powershell
-Copy-Item .env.example .env
-```
-
-`LEARNING_APP_NAME` 决定应用标题；`LEARNING_ENVIRONMENT` 是显示用环境名称，
-不自动改变安全策略或启动方式。系统环境变量优先于 `.env`。
-`.env` 不进入 Git，新增配置项时更新 `.env.example`。
+直接启动即可，应用不读取 `.env`。模板练习通过 `/demo?name=小明` 接收参数，
+无需为了传入一个名字增加环境变量或配置类。
 
 ## 日常安装与恢复
 

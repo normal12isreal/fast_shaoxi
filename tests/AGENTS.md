@@ -1,6 +1,6 @@
 # 测试职责
 
-- 使用 pytest 与 FastAPI TestClient，测试对外行为、输入校验和配置影响。
+- 使用 pytest 与 FastAPI TestClient，直接导入 `app.main.app`，测试响应与输入校验。
 - 每项业务能力有对应测试文件；公共 fixture 放 `conftest.py`。
 - 不启动真实监听端口，不依赖远程服务，不读取个人 `.env`。
 - 数据库练习开始后，测试使用独立临时数据库，禁止写入学习用的真实数据。

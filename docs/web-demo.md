@@ -5,9 +5,9 @@
 
 ## 从哪个文件开始看
 
-1. [main.py](../app/main.py)：Uvicorn 加载 `app`；`create_app()` 装配 API、页面和静态目录。
+1. [main.py](../app/main.py)：先 `app = FastAPI()`，再直接注册 API、页面和静态目录。
 2. [页面路由](../app/pages/routes.py)：看三个 URL 分别返回什么。
-3. [页面模板](../app/templates/index.html)：看 `{{ app_name }}` 与 `url_for(...)` 的来源。
+3. [页面模板](../app/templates/index.html)：看 `{{ name }}` 与 `url_for(...)` 的来源。
 4. [浏览器脚本](../app/static/app.js)：看表单如何变成一次 JSON 请求。
 5. [echo 路由](../app/api/routes/examples.py) 与 [schema](../app/schemas/examples.py)：
    看输入校验和输出字段。
@@ -19,7 +19,7 @@
 
 | 操作 | 调用映射 | 浏览器收到什么 |
 |---|---|---|
-| 打开 `/demo` | `demo_page()` → `templates/index.html`，填入配置中的网站名称 | HTML |
+| 打开 `/demo?name=小明` | 查询参数 → `demo_page()` → `context` → 模板中的名字 | HTML |
 | 打开图片或加载 CSS、JS | `/static/` → `main.py` 挂载 → `app/static/` 下的相对文件 | 原文件内容 |
 | 表单发送文字 | `app.js` → `POST /examples/echo` → `EchoRequest` → `echo()` → `EchoResponse` | JSON |
 | 点击直接 HTML 链接 | `plain_html()` → Python 中的 HTML 字符串 | HTML |
@@ -39,6 +39,7 @@
 
 1. 打开开发者工具的 Network 面板，再刷新 `/demo`。观察 HTML、CSS、JS、两张 SVG
    是不同请求；浏览器也可能额外请求 favicon。
+   再访问 `/demo?name=小明`，观察 Python 参数如何通过 `context` 填入模板。
 2. 输入中文并发送。观察 Fetch/XHR 中的请求体和 JSON 响应，整个页面没有重新加载。
 3. 输入 `<b>你好</b>`，结果应显示为普通文本，不变成加粗 HTML。
 4. 在 `/docs` 调用 echo：发送 `{"message":""}`，观察 422 和字段错误位置。
