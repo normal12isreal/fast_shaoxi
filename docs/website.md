@@ -35,7 +35,8 @@ Windows 使用 Junction，Linux 使用符号链接。没有复制数据，查询
 | `/guide` | `POST/GET /api/assistant/conversations` | 教程公开；登录后新建、分页读取对话 |
 | `/guide` | `GET/POST /api/assistant/conversations/{id}/messages` | 恢复原始历史、发送消息 |
 | `/guide` | `DELETE /api/assistant/conversations/{id}` | 删除本人对话及消息；运行中返回 409 |
-| `/docs` | `/openapi.json` | 查看实际字段、错误说明与调用示例 |
+| `/api-docs` | 无 | 面向外部调用者：curl、PowerShell、Python 示例、返回结果与错误处理 |
+| `/docs` | `/openapi.json` | 开发调试用的 FastAPI 自动接口清单，不在网站主导航展示 |
 
 记录与对话每页可指定 `limit`、`offset`，范围见 `/docs`。
 对话消息从最新一页向前读取，每页内部按发送顺序排列；页面提供“加载更早消息”。

@@ -4,13 +4,14 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}学生手册问答{% endblock %} · Handbook API</title>
   <link rel="stylesheet" href="{{ url_for('static', path='/styles.css').path }}">
+  {% block styles %}{% endblock %}
   <script src="{{ url_for('static', path='/common.js').path }}" defer></script>
   {% block scripts %}{% endblock %}
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="/"><span class="brand-icon">H</span> Handbook<span class="muted"> / API</span></a>
-    <nav aria-label="主导航"><a href="/">在线问答</a><a href="/guide">本地安装</a><a href="/docs">接口文档 ↗</a><a href="/account">我的记录</a></nav>
+    <nav aria-label="主导航"><a href="/">在线问答</a><a href="/guide">本地安装</a><a href="/api-docs">接口文档</a><a href="/account">我的记录</a></nav>
     <div id="user-nav"><a href="/login">登录</a><a class="small-button" href="/register">注册</a></div>
   </header>
   <main>{% block content %}{% endblock %}</main>

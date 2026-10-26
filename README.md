@@ -12,7 +12,8 @@
 .\scripts\dev.ps1
 ```
 
-打开 <http://127.0.0.1:8000/>，接口文档在 `/docs`。按 Ctrl+C 停止。
+打开 <http://127.0.0.1:8000/>，面向调用者的接口使用教程在 `/api-docs`。
+开发调试用的 FastAPI 自动文档仍在 `/docs`。按 Ctrl+C 停止。
 如脚本执行受限，可用 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1`。
 
 ## 当前功能

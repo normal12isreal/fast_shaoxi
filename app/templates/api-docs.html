@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}接口使用教程{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='/api-docs.css').path }}">{% endblock %}
+{% block content %}
+<div class="api-docs">
+  <header class="page-heading">
+    <p class="eyebrow">API / QUICK START</p>
+    <h1>在你的程序里查询学生手册</h1>
+    <p class="lead">通过 HTTP 发送一个问题，等待回答完成，再读取返回的 JSON。无需登录，无需 API Key。</p>
+    <p class="hint">以下地址使用当前网站的域名和端口，可直接复制。网站需已启动，调用程序需能访问这个地址。</p>
+  </header>
+
+  <section class="panel markdown">
+    <h2>1. 发送一个问题</h2>
+    <p class="endpoint"><strong>POST</strong> <code>{{ ask_url }}</code></p>
+    <p>请求头设置 <code>Content-Type: application/json</code>，正文只需要 <code>question</code>：</p>
+    <pre><code>{"question": "国家奖学金的申请条件？"}</code></pre>
+    <p>问题去除首尾空白后须为 1–500 个字符。每次提问独立处理，不携带上一次问答的上下文。</p>
+
+    <h3>curl 示例（Bash / Linux / macOS）</h3>
+    <pre><code>curl -X POST {{ ask_url }} \
+  -H 'Content-Type: application/json' \
+  --max-time 210 \
+  -d '{"question":"国家奖学金的申请条件？"}'</code></pre>
+    <p class="hint"><code>-X POST</code> 指定请求方法，<code>-H</code> 指定 JSON 格式，<code>-d</code> 是问题正文；<code>--max-time 210</code> 最多等待 210 秒。</p>
+
+    <details>
+      <summary>Windows PowerShell 示例</summary>
+      <pre><code>$body = @{ question = "国家奖学金的申请条件？" } | ConvertTo-Json
+$result = Invoke-RestMethod `
+  -Method Post `
+  -Uri '{{ ask_url }}' `
+  -ContentType 'application/json; charset=utf-8' `
+  -Body ([System.Text.Encoding]::UTF8.GetBytes($body)) `
+  -TimeoutSec 210
+
+$result.answer
+$result.sources</code></pre>
+      <p class="hint">PowerShell 的换行符是反引号 <code>`</code>，curl 上面使用的反斜杠 <code>\</code> 不适用于这段命令。</p>
+    </details>
+
+    <details>
+      <summary>Python 示例（使用标准库，无需另外安装库）</summary>
+      <pre><code>import json
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+body = json.dumps({"question": "国家奖学金的申请条件？"}).encode("utf-8")
+request = Request(
+    "{{ ask_url }}",
+    data=body,
+    headers={"Content-Type": "application/json"},
+    method="POST",
+)
+
+try:
+    with urlopen(request, timeout=210) as response:
+        result = json.load(response)
+    print(result["answer"])
+    print(result["sources"])
+    print(result["status"], result["complete"])
+except HTTPError as error:
+    print("HTTP", error.code)
+    print(error.read().decode("utf-8"))</code></pre>
+    </details>
+  </section>
+
+  <section class="panel markdown">
+    <h2>2. 等待完整回答</h2>
+    <p>通常需要约 20 秒，复杂问题可能更久。保持这一次 HTTP 请求，服务端会在处理完成后一次性返回 JSON。</p>
+    <p>建议调用端设置 <strong>210 秒超时</strong>；网站最多等待 180 秒。等待期间不要反复提交相同问题。</p>
+  </section>
+
+  <section class="panel markdown">
+    <h2>3. 读取回答和引用</h2>
+    <p>返回示例（正文、页码和耗时仅用于说明格式）：</p>
+    <pre><code>{
+  "request_id": "example-request-id",
+  "question": "国家奖学金的申请条件？",
+  "answer": "这里是根据手册生成的回答 [1]。",
+  "sources": [
+    {
+      "label": "资料1",
+      "text": "这里是实际引用的手册原文。",
+      "pdf_pages": [12],
+      "kind": "handbook",
+      "web_sources": []
+    }
+  ],
+  "status": "answered",
+  "complete": true,
+  "elapsed_seconds": 20.1,
+  "warnings": []
+}</code></pre>
+    <table>
+      <thead><tr><th>字段</th><th>在程序中怎么使用</th></tr></thead>
+      <tbody>
+        <tr><td><code>answer</code></td><td>展示给用户的回答正文。</td></tr>
+        <tr><td><code>sources</code></td><td>引用资料列表；读取 <code>text</code> 看原文、<code>pdf_pages</code> 看 PDF 页码。网页补充资料的标题和链接位于 <code>web_sources</code>。</td></tr>
+        <tr><td><code>status</code></td><td><code>answered</code> 表示已回答；其他状态见下方，可能需要澄清问题或核对证据。</td></tr>
+        <tr><td><code>complete</code></td><td>是否完整生成。<code>false</code> 时提示用户本次回答未完整生成。</td></tr>
+        <tr><td><code>warnings</code></td><td>引用检查等警告；非空时应提醒用户核对回答与引用。</td></tr>
+        <tr><td><code>request_id</code>、<code>question</code>、<code>elapsed_seconds</code></td><td>分别用于标识本次结果、确认对应问题和展示处理耗时。</td></tr>
+      </tbody>
+    </table>
+    <p>HTTP 200 表示成功取得结果，仍需结合 <code>status</code> 和 <code>complete</code> 判断如何展示：</p>
+    <ul>
+      <li><code>needs_clarification</code>：问题需要补充信息；<code>abstained</code>：资料不足，暂未给出确定答案。</li>
+      <li><code>partial_answer</code>：依据有限，只给出了部分回答；<code>unverified</code>：引用检查存在警告。</li>
+      <li><code>incomplete</code>：回答未完整生成。完整生成也不代表证据一定充分。</li>
+    </ul>
+  </section>
+
+  <section class="panel markdown">
+    <h2>请求失败时怎么处理</h2>
+    <p>非 200 响应可读取 JSON 中的 <code>detail</code>。例如服务忙碌时：</p>
+    <pre><code>{"detail": "问答服务正在处理其他问题，请稍后重试。"}</code></pre>
+    <table>
+      <thead><tr><th>HTTP 状态码</th><th>处理方式</th></tr></thead>
+      <tbody>
+        <tr><td>422</td><td>检查请求是否是 JSON、是否包含非空且不超过 500 字符的 <code>question</code>。此时 <code>detail</code> 通常是校验错误列表。</td></tr>
+        <tr><td>503</td><td>服务正在处理其他问题。按响应头 <code>Retry-After</code> 提示稍后再试，当前为 5 秒。</td></tr>
+        <tr><td>502</td><td>问答或上游模型调用失败，请稍后再试；持续出现时联系网站维护者。</td></tr>
+        <tr><td>504</td><td>网站等待超时。后台调用可能仍在结束，不要立即反复重发。</td></tr>
+      </tbody>
+    </table>
+    <p>如果程序提示“连接失败”，先确认网站地址、端口以及服务是否已启动。<code>127.0.0.1</code> 代表调用程序所在的电脑；其他电脑调用时需要网站实际可访问的地址。</p>
+  </section>
+</div>
+{% endblock %}

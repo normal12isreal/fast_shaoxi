@@ -1,18 +1,12 @@
 {% extends "base.html" %}
 {% block scripts %}<script src="{{ url_for('static', path='/home.js').path }}" defer></script>{% endblock %}
 {% block content %}
-<section class="hero">
+<section class="page-heading">
   <div><p class="eyebrow">STUDENT HANDBOOK / OPEN API</p><h1>把手册里的规定，<br>变成有依据的回答。</h1>
     <p class="lead">输入一个问题，查询学生手册中的条款。每次问答独立处理，返回原文引用和 PDF 页码。</p>
     <div class="badges"><span>公开接口</span><span>无需 API Key</span><span>来源可追溯</span></div>
+    <p><a href="/api-docs">在自己的程序中调用：查看接口使用教程 →</a></p>
   </div>
-  <aside class="code-card"><div class="code-label">一次请求，一份回答 <span>POST</span></div>
-    <pre>curl -X POST http://127.0.0.1:8000/api/rag/ask \
-  -H 'Content-Type: application/json' \
-  --max-time 210 \
-  -d '{"question":"国家奖学金的申请条件？"}'</pre>
-    <a href="/docs">查看完整接口与返回字段 →</a>
-  </aside>
 </section>
 <section class="panel" id="playground">
   <div class="section-heading"><div><p class="eyebrow">PLAYGROUND</p><h2>直接试一问</h2></div><span class="muted">和外部调用使用同一个接口</span></div>

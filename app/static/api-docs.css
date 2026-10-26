@@ -1,0 +1,21 @@
+.api-docs {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.api-docs .panel > h2:first-child {
+  margin-top: 0;
+}
+
+.api-docs .endpoint {
+  overflow-wrap: anywhere;
+}
+
+.api-docs .endpoint strong {
+  color: var(--accent);
+  margin-right: 10px;
+}
+
+.api-docs pre {
+  font-size: 13px;
+}

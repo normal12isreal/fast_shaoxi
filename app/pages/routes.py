@@ -29,6 +29,16 @@ def guide(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name="guide.html", context=page_knowledge())
 
 
+@router.get("/api-docs", response_class=HTMLResponse)
+def api_documentation(request: Request) -> HTMLResponse:
+    # GET /api-docs → 调用教程；示例地址跟随当前网站的域名、端口。
+    return templates.TemplateResponse(
+        request=request,
+        name="api-docs.html",
+        context={"ask_url": str(request.url_for("ask"))},
+    )
+
+
 @router.get("/login", response_class=HTMLResponse)
 @router.get("/register", response_class=HTMLResponse)
 def authentication(request: Request) -> HTMLResponse:
