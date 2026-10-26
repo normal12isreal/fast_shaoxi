@@ -42,13 +42,14 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
 
 ## 应用配置
 
-页面和本地账号可直接启动；RAG 查询需要原项目已有数据和模型凭据。
+页面和本地账号可直接启动；RAG 已有数据随项目提供，查询需要本机模型凭据。
 复制根 `.env.example` 为 `.env` 后，`scripts/dev.ps1` 通过 uv 加载。
 直接运行 uvicorn、迁移脚本时须自行设置环境变量或使用 uv 的 `--env-file .env`。
 测试使用临时数据库和模拟模型，不读取个人 `.env`。
 
-`RAG_PROJECT_DIR` 默认同级 `student-handbook-rag`；网站只引用原代码和数据。
-`DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL` 可覆盖原 RAG 的私有本地凭据。
+`RAG_PROJECT_DIR` 默认项目内 `rag/`；相对路径始终以项目根目录为基准。
+`DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL` 可覆盖 `rag/.runtime/dashscope.local.json` 中的本机凭据。
+源码和索引通过 `rag/upstream.json` 记录上游来源与文件校验；无需读取原仓库目录。
 真实密钥只放本机环境或被忽略的 `.env`，不放教程、聊天或 Git。
 `HANDBOOK_DATABASE_PATH` 默认 `data/site.sqlite3`，`COOKIE_SECURE=true` 用于 HTTPS。
 助手独立模型名称由 `ASSISTANT_MODEL` 指定，默认 `qwen3.7-plus`。

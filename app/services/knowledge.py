@@ -12,9 +12,9 @@ PUBLIC_FILES = ("README.md", "config/dashscope.example.json")
 
 
 def rag_directory() -> Path:
-    return Path(
-        os.environ.get("RAG_PROJECT_DIR", PROJECT_ROOT.parent / "student-handbook-rag")
-    ).resolve()
+    # 默认使用本项目内的运行资料；相对路径也以项目根目录为基准。
+    path = Path(os.environ.get("RAG_PROJECT_DIR") or "rag")
+    return (path if path.is_absolute() else PROJECT_ROOT / path).resolve()
 
 
 def public_sources() -> list[dict[str, str]]:

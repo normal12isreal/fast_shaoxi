@@ -1,1 +1,3 @@
 * text=auto eol=lf
+# RAG 运行快照保留原始字节，避免换行转换使索引和来源校验失效。
+rag/** -text whitespace=cr-at-eol

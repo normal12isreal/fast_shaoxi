@@ -32,6 +32,8 @@ pythonpath = ["."]
 [tool.ruff]
 target-version = "py313"
 line-length = 100
+# 原 RAG 运行快照保留上游字节，避免格式化改变来源校验。
+extend-exclude = ["rag/scripts", "rag/student_handbook_rag"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

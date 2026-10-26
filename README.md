@@ -1,7 +1,8 @@
 # 学生手册 RAG 网站
 
-用 FastAPI 学习网页、HTTP 接口、数据库和模型调用。网站引用原来的
-[学生手册 RAG](https://github.com/normal12isreal/shaoxing_university_handbook_rag)，不复制数据或重新生成向量。
+用 FastAPI 学习网页、HTTP 接口、数据库和模型调用。网站自带
+[学生手册 RAG](https://github.com/normal12isreal/shaoxing_university_handbook_rag) 的运行代码和现有索引，
+统一放在 `rag/`，无需另一个仓库目录或重新生成向量。
 
 ## 本地启动
 
@@ -22,8 +23,9 @@
 均已可用。首页公开单次问答；安装教程公开，安装助手及历史对话需要登录。
 助手只帮助安装、运行原 RAG，支持新建对话、恢复历史和较早上下文的摘要压缩。
 原消息始终完整保留，失败或超时会标明状态。
-原项目默认位于同级 `student-handbook-rag`，其他位置通过 `RAG_PROJECT_DIR` 指定。
-教程与首页读取原项目公开 README，安装补充资料在 `knowledge/installation.md`。
+网站默认使用项目内 `rag/`，可通过 `RAG_PROJECT_DIR` 显式指定其他位置；相对路径以项目根为基准。
+教程与首页读取 `rag/README.md`，安装补充资料在 `knowledge/installation.md`。
+运行资料和来源说明见 [RAG 导航](rag/AGENTS.md)。
 
 可复制 `.env.example` 为 `.env` 调整配置，`scripts/dev.ps1` 会读取它。
 首次启动自动创建 `data/site.sqlite3` 并应用迁移。账号采用用户名和密码，不接邮箱。
@@ -31,7 +33,10 @@
 数据库和密码哈希不进入 Git，详见 [数据库说明](docs/database.md)。
 
 公开 `POST /api/rag/ask` 只接收 `{"question":"申请国家奖学金需要满足哪些条件？"}`，
-不需要账号或 API Key。调用前需要原 RAG 已配置索引和模型凭据；网站不安装或重建它们。
+不需要账号或 API Key。已有索引随项目提供；网站调用模型需要维护者配置百炼凭据。
+可以在 `.env` 中提供 `DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL`，或使用本机私有文件
+`rag/.runtime/dashscope.local.json`（格式参考 `rag/config/dashscope.example.json`）。
+本机迁入的凭据和后续查询缓存均不进入 Git，原仓库保持不变。
 外部程序示例：
 
 ```powershell

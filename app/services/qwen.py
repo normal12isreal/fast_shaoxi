@@ -5,7 +5,7 @@ import os
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from app.services.knowledge import rag_directory
-from app.services.rag import import_original
+from app.services.rag import import_rag
 
 
 class QwenError(Exception):
@@ -18,7 +18,7 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 def load_credentials() -> tuple[str, str]:
-    import_original()
+    import_rag()
     from scripts.embed_chunks import load_local_credentials
 
     return load_local_credentials(rag_directory())

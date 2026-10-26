@@ -14,7 +14,7 @@ app/
   services/
     knowledge.py          页面与助手共用的公开资料白名单
     execution.py          线程池、执行名额和 HTTP 等待上限
-    rag.py                原 RAG 包引用、数据目录引用和单次调用
+    rag.py                项目内 RAG 加载和单次调用
     auth.py               密码、会话身份和同源校验
     records.py            登录用户问答记录的短事务
     assistant.py          对话归属、运行状态与消息保存
@@ -22,6 +22,7 @@ app/
     qwen.py               独立的千问多轮 HTTP 调用
   db/                     SQLite 连接与 ORM 模型
 migrations/               可重复执行的数据库版本演进
+rag/                      上游运行代码、公开配置和已有索引，保留来源及许可
 knowledge/                安装补充资料，不存模型密钥
 tests/                    临时数据库、模拟模型和对外行为验证
 scripts/                  项目内工具、启动、迁移与外部调用示例

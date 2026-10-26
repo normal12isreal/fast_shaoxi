@@ -12,6 +12,7 @@
 | 测试与行为回归 | [tests/AGENTS.md](tests/AGENTS.md) |
 | 本地 Python、依赖、启动命令 | [scripts/AGENTS.md](scripts/AGENTS.md) |
 | 学习路线、架构与运行说明 | [docs/AGENTS.md](docs/AGENTS.md) |
+| 项目内 RAG 代码、配置与已有索引 | [rag/AGENTS.md](rag/AGENTS.md) |
 
 ## 工作约定
 
