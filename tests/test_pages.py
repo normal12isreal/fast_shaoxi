@@ -8,3 +8,6 @@ def test_pages_and_knowledge(client):
     assert client.get("/health").json() == {"status": "ok"}
     assert client.get("/static/styles.css").status_code == 200
     assert client.get("/examples/echo").status_code == 404
+    specification = client.get("/openapi.json").json()
+    assert specification["paths"]["/api/rag/ask"]["post"]["tags"] == ["公开手册问答"]
+    assert specification["paths"]["/api/rag/records"]["get"]["tags"] == ["个人记录"]

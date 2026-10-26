@@ -20,15 +20,13 @@ def home(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={**page_knowledge(), "rag_enabled": True},
+        context=page_knowledge(),
     )
 
 
 @router.get("/guide", response_class=HTMLResponse)
 def guide(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        request=request, name="guide.html", context={**page_knowledge(), "assistant_enabled": False}
-    )
+    return templates.TemplateResponse(request=request, name="guide.html", context=page_knowledge())
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -37,12 +35,10 @@ def authentication(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="auth.html",
-        context={"register": request.url.path == "/register", "auth_enabled": True},
+        context={"register": request.url.path == "/register"},
     )
 
 
 @router.get("/account", response_class=HTMLResponse)
 def account(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        request=request, name="account.html", context={"auth_enabled": True}
-    )
+    return templates.TemplateResponse(request=request, name="account.html")

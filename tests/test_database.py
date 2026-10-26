@@ -2,7 +2,7 @@ from alembic.autogenerate import compare_metadata
 from alembic.migration import MigrationContext
 from sqlalchemy import select, text
 
-from app.db.models import Base, RAGRecord
+from app.db.models import Base, Conversation, Message, RAGRecord
 from tests.test_accounts import login
 
 
@@ -15,7 +15,15 @@ def test_migration_matches_models_and_preserves_records(client):
         assert connection.scalar(text("PRAGMA foreign_keys")) == 1
     with database.sessions.begin() as session:
         session.add(RAGRecord(id="interrupted", user_id=1, question="待处理", status="processing"))
+        session.add(Conversation(id="old-conversation", user_id=1))
+        session.flush()
+        session.add(
+            Message(
+                conversation_id="old-conversation", role="user", content="未完成", status="pending"
+            )
+        )
     database.migrate()
     database.recover_interrupted()
     with database.sessions() as session:
         assert session.scalar(select(RAGRecord)).status == "interrupted"
+        assert session.scalar(select(Message)).status == "failed"

@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.router import api_router
 from app.db.core import Database
 from app.pages.routes import router as page_router
+from app.services.assistant import AssistantService
 from app.services.rag import RAGService
 
 APP_DIR = Path(__file__).resolve().parent
@@ -21,10 +22,12 @@ async def lifespan(application: FastAPI):
     application.state.db.migrate()
     application.state.db.recover_interrupted()
     application.state.rag = RAGService()
+    application.state.assistant = AssistantService(application.state.db)
     try:
         yield
     finally:
         application.state.rag.pool.close()
+        application.state.assistant.pool.close()
         application.state.db.close()
 
 
@@ -35,5 +38,5 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
 # 页面注册：pages/routes.py → 首页、安装教程、账号页面。
 app.include_router(page_router)
-# /static/images/user.svg → app/static/images/user.svg；同样适用于 CSS 和 JS。
+# /static/styles.css → app/static/styles.css；浏览器脚本也按相对路径映射。
 app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")

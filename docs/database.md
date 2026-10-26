@@ -12,7 +12,7 @@ SQLite 文件默认是 `data/site.sqlite3`，应用启动自动执行 Alembic `u
 | conversations | 用户、标题、历史摘要、摘要边界 |
 | messages | 所属对话、角色、原始正文、完成或失败状态 |
 
-助手表先建立结构，在助手阶段接通行为。删除对话时由外键级联删除消息。
+删除对话时由外键级联删除消息。
 所有记录查询都限定当前用户；未登录无法枚举记录。会话 Cookie 为 HttpOnly、SameSite=Lax，
 退出删除服务端会话。HTTPS 部署要设置 `COOKIE_SECURE=true`。
 携带登录 Cookie 的写请求需发送同源 Origin（浏览器自动发送）；脚本可显式设置，

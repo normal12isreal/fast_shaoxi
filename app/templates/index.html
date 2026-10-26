@@ -7,7 +7,7 @@
     <div class="badges"><span>公开接口</span><span>无需 API Key</span><span>来源可追溯</span></div>
   </div>
   <aside class="code-card"><div class="code-label">一次请求，一份回答 <span>POST</span></div>
-    <pre>curl -X POST /api/rag/ask \
+    <pre>curl -X POST http://127.0.0.1:8000/api/rag/ask \
   -H 'Content-Type: application/json' \
   --max-time 210 \
   -d '{"question":"国家奖学金的申请条件？"}'</pre>
@@ -19,9 +19,9 @@
   <form id="ask-form">
     <label for="question">你的问题</label>
     <textarea id="question" maxlength="500" rows="3" required placeholder="例如：申请国家奖学金需要满足哪些条件？"></textarea>
-    <div class="form-bottom"><p class="hint">通常需要约 20 秒，复杂问题可能更久。匿名使用不保存个人历史。</p><button id="ask-button" {% if not rag_enabled %}disabled{% endif %}>提交问题 ↗</button></div>
+    <div class="form-bottom"><p class="hint">通常需要约 20 秒，复杂问题可能更久。匿名使用不保存个人历史。</p><button id="ask-button">提交问题 ↗</button></div>
   </form>
-  <p id="ask-status" role="status">{% if not rag_enabled %}页面已就绪，问答接口尚未接通。{% endif %}</p>
+  <p id="ask-status" role="status"></p>
   <article id="answer" class="answer" hidden><div class="result-heading"><h3>回答</h3><span id="answer-meta" class="muted"></span></div><div id="answer-text" class="plain-text"></div><div id="answer-warnings" class="notice" hidden></div><div id="sources"></div></article>
 </section>
 <section class="readme-section"><div class="section-heading"><div><p class="eyebrow">ABOUT THE PROJECT</p><h2>项目说明</h2></div><a href="{{ repository }}">在 GitHub 查看 ↗</a></div>

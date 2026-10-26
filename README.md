@@ -15,10 +15,12 @@
 打开 <http://127.0.0.1:8000/>，接口文档在 `/docs`。按 Ctrl+C 停止。
 如脚本执行受限，可用 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1`。
 
-## 当前施工阶段
+## 当前功能
 
 首页 `/`、安装教程 `/guide`、登录 `/login`、注册 `/register`、个人中心 `/account`
-已建立，公开问答、注册登录和个人记录已接通；安装助手尚在施工。
+均已可用。首页公开单次问答；安装教程公开，安装助手及历史对话需要登录。
+助手只帮助安装、运行原 RAG，支持新建对话、恢复历史和较早上下文的摘要压缩。
+原消息始终完整保留，失败或超时会标明状态。
 原项目默认位于同级 `student-handbook-rag`，其他位置通过 `RAG_PROJECT_DIR` 指定。
 教程与首页读取原项目公开 README，安装补充资料在 `knowledge/installation.md`。
 
@@ -48,6 +50,7 @@
 
 - [文档地图](docs/README.md)：按问题找说明。
 - [网站调用关系](docs/website.md)：页面、JSON 接口和处理模块。
+- [架构阅读顺序](docs/architecture.md)：从入口沿一条请求往下看。
 - [环境说明](docs/setup.md)：项目内工具与依赖。
 - [Agent 导航](AGENTS.md)：维护职责。
 

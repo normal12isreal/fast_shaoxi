@@ -12,11 +12,13 @@ from app.services.auth import CurrentUser, MaybeUser, same_origin
 from app.services.execution import BusyError
 from app.services.records import begin_record, finish_record
 
-router = APIRouter(prefix="/api/rag", tags=["公开手册问答"])
+router = APIRouter(prefix="/api/rag")
 
 
 @router.post(
     "/ask",
+    tags=["公开手册问答"],
+    summary="公开单次手册问答",
     dependencies=[Depends(same_origin)],
     response_model=AskResult,
     responses={
@@ -30,6 +32,13 @@ async def ask(body: AskRequest, request: Request, user: MaybeUser) -> AskResult:
     """公开接口，无需登录或密钥。只发送 question，等待一次完整 JSON 响应。
 
     通常约 20 秒；调用端请设置 210 秒超时。不会自动重发整次问答。
+
+    外部调用示例（不携带 Cookie）：
+    ```bash
+    curl --max-time 210 http://127.0.0.1:8000/api/rag/ask \
+      -H 'Content-Type: application/json' \
+      -d '{"question":"申请国家奖学金需要满足哪些条件？"}'
+    ```
     """
     database = request.app.state.db
     record_id = begin_record(database, user, body.question)

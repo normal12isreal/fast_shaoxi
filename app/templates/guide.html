@@ -4,12 +4,12 @@
 {% block content %}
 <div class="page-heading"><p class="eyebrow">RUN IT LOCALLY</p><h1>在本地运行学生手册 RAG</h1><p class="lead">安装原 GitHub 项目，使用自己的百炼配置。遇到报错，可以向右侧安装助手提问。</p></div>
 <div class="guide-grid">
-  <section><article class="markdown panel">{{ guide_html | safe }}{{ supplement_html | safe }}</article>
-    <details class="panel"><summary>安装助手参考哪些资料？</summary><p>教程与助手共用这些公开资料，不读取私有配置。</p><ul>{% for source in sources %}<li>{{ source }}</li>{% endfor %}</ul><a href="{{ repository }}">原项目仓库 ↗</a></details>
+  <section><article class="markdown panel">{{ guide_html | safe }}<div id="installation-supplement">{{ supplement_html | safe }}</div></article>
+    <details class="panel"><summary>安装助手参考哪些资料？</summary><p>教程与助手共用这些公开资料，不读取私有配置。</p><ul>{% for source in sources %}<li><a href="{{ '#installation-supplement' if source == 'installation.md' else repository + '/blob/main/' + source }}">{{ source }}</a></li>{% endfor %}</ul><a href="{{ repository }}">原项目仓库 ↗</a></details>
   </section>
   <aside class="panel chat-panel"><div class="section-heading"><h2>安装助手</h2><button id="new-conversation" class="secondary" disabled>新建对话</button></div>
     <p class="hint">只帮助安装和运行原 RAG 项目。粘贴报错前，请删除密钥等个人信息。</p>
-    <div id="assistant-login" class="notice">{% if assistant_enabled %}正在检查登录状态…{% else %}助手尚未接通。完成后需登录使用，支持保存多个对话。{% endif %}</div>
+    <div id="assistant-login" class="notice">正在检查登录状态…</div>
     <label for="conversation-list">我的对话</label><select id="conversation-list" disabled><option value="">选择或新建对话</option></select><div class="chat-tools"><button type="button" id="more-conversations" class="text-button" disabled>加载更多对话</button><button type="button" id="delete-conversation" class="text-button" disabled>删除当前对话</button></div>
     <button type="button" id="more-messages" class="text-button" disabled>加载更早消息</button>
     <div id="messages" class="messages" role="log" aria-label="安装助手对话"><p class="empty-state">从一个安装问题开始。</p></div>

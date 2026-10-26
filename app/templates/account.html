@@ -3,6 +3,6 @@
 {% block scripts %}<script src="{{ url_for('static', path='/account.js').path }}" defer></script>{% endblock %}
 {% block content %}
 <div class="page-heading"><p class="eyebrow">YOUR HISTORY</p><h1>我的问答记录</h1><p class="lead">登录期间发起的手册问答会保存在这里。查看记录不会重新调用模型。</p></div>
-<section class="panel"><p id="account-status" role="status">{% if auth_enabled %}正在加载…{% else %}记录功能尚未接通。{% endif %}</p><div id="records"></div><div class="pagination"><button id="previous-records" class="secondary" disabled>上一页</button><span id="record-page"></span><button id="next-records" class="secondary" disabled>下一页</button></div></section>
+<section class="panel"><p id="account-status" role="status">正在加载…</p><div id="records"></div><div class="pagination"><button id="previous-records" class="secondary" disabled>上一页</button><span id="record-page"></span><button id="next-records" class="secondary" disabled>下一页</button></div></section>
 {% endblock %}
 

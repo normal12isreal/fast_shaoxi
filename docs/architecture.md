@@ -9,7 +9,7 @@ app/
   templates/              首页、安装教程、账号、个人中心
   static/                 浏览器提交表单、显示结果和样式
   api/router.py           汇总 JSON 路由
-  api/routes/             health、auth、rag，助手在下一阶段接通
+  api/routes/             health、auth、rag、assistant
   schemas/                HTTP 输入输出与约束
   services/
     knowledge.py          页面与助手共用的公开资料白名单
@@ -17,6 +17,9 @@ app/
     rag.py                原 RAG 包引用、数据目录引用和单次调用
     auth.py               密码、会话身份和同源校验
     records.py            登录用户问答记录的短事务
+    assistant.py          对话归属、运行状态与消息保存
+    assistant_context.py  职责、资料、摘要和最近六轮的组织
+    qwen.py               独立的千问多轮 HTTP 调用
   db/                     SQLite 连接与 ORM 模型
 migrations/               可重复执行的数据库版本演进
 knowledge/                安装补充资料，不存模型密钥
@@ -31,8 +34,13 @@ scripts/                  项目内工具、启动、迁移与外部调用示例
 个人记录只能按当前用户查询，数据库事务不跨模型等待。
 
 `main.py` 保留直接创建应用，没有应用工厂或配置类。
-`app.state` 只持有需要生命周期的数据库、RAG 及后续助手资源。
+`app.state` 只持有需要生命周期的数据库、RAG 及助手资源。
 services 按实际规则拆分，不强制一张表一个 repository，也不逐层重复转发。
+
+安装助手调用链：`static/assistant.js` → `api/routes/assistant.py` →
+`services/assistant.py` 保存待处理消息并申请名额 → 工作线程组织上下文、调用千问 →
+短事务保存回答 → JSON 回到页面。HTTP 超时只把记录标为失败，线程结束前不会释放对话。
+首页问答和助手分别维护自己的执行池，互相不传聊天历史。
 
 新增接口维护路由、schema 和必要测试；新增配置同步环境说明。
 只有实际职责边界变化才补文档导航。部署配置等后续学到服务器阶段再加。

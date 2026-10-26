@@ -30,7 +30,10 @@ def same_origin(request: Request) -> None:
         referer = request.headers.get("referer")
         if not referer:
             raise HTTPException(403, "携带登录 Cookie 的写请求需要同源 Origin。")
-        parts = urlsplit(referer)
+        try:
+            parts = urlsplit(referer)
+        except ValueError:
+            raise HTTPException(403, "无效的来源地址。") from None
         origin = f"{parts.scheme}://{parts.netloc}"
     if origin is not None and origin != f"{request.url.scheme}://{request.url.netloc}":
         raise HTTPException(403, "不接受跨站写请求。")

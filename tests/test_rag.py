@@ -33,6 +33,7 @@ def test_public_api_and_validation(client, monkeypatch):
     assert response.status_code == 200
     assert response.json()["question"] == "奖学金？"
     assert "private" not in response.text
+    assert "ApiKey" not in client.get("/openapi.json").text
     for value in ("", "  ", "x" * 501, 123, None):
         assert client.post("/api/rag/ask", json={"question": value}).status_code == 422
     assert client.post("/api/rag/ask", json={}).status_code == 422
@@ -46,6 +47,32 @@ def test_safe_upstream_failure(client, monkeypatch):
     response = client.post("/api/rag/ask", json={"question": "问题"})
     assert response.status_code == 502
     assert "secret" not in response.text
+
+
+def test_web_citations_are_public_without_internal_paths(client, monkeypatch):
+    def web_answer(question):
+        result = answer(question)
+        result["sources"] = [
+            {
+                "label": "资料1",
+                "kind": "web_search_summary",
+                "text": "联网摘要",
+                "web_sources": [
+                    {
+                        "title": "官方资料",
+                        "url": "https://www.usx.edu.cn/",
+                        "internal_path": "private",
+                    }
+                ],
+            }
+        ]
+        return result
+
+    monkeypatch.setattr(client.app.state.rag, "query", web_answer)
+    response = client.post("/api/rag/ask", json={"question": "问题"})
+    assert response.status_code == 200
+    assert response.json()["sources"][0]["web_sources"][0]["url"] == "https://www.usx.edu.cn/"
+    assert "private" not in response.text
 
 
 def test_timeout_keeps_real_slot(client, monkeypatch):

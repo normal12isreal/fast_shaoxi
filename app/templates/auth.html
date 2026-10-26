@@ -7,8 +7,8 @@
   <label for="username">用户名</label><input id="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_]+" required>
   <p class="hint">3–32 位英文字母、数字或下划线。</p>
   <label for="password">密码</label><input id="password" type="password" autocomplete="{{ 'new-password' if register else 'current-password' }}" minlength="8" maxlength="128" required><p class="hint">8–128 个字符。</p>
-  <button id="auth-submit" {% if not auth_enabled %}disabled{% endif %}>{{ "注册并登录" if register else "登录" }}</button>
-</form><p id="auth-status" role="status">{% if not auth_enabled %}账号功能尚未接通。{% endif %}</p>
+  <button id="auth-submit">{{ "注册并登录" if register else "登录" }}</button>
+</form><p id="auth-status" role="status"></p>
 <a href="{{ '/login' if register else '/register' }}">{{ "已有账号？去登录" if register else "没有账号？去注册" }}</a></section>
 {% endblock %}
 

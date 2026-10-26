@@ -20,6 +20,10 @@ async function loadRecords() {
               const paragraph = document.createElement("p");
               paragraph.textContent = `${source.label}（PDF ${source.pdf_pages.join("、")}）：${source.text}`;
               answer.append(paragraph);
+              for (const reference of source.web_sources || []) {
+                const line = document.createElement("p"); const link = document.createElement("a");
+                link.href = reference.url; link.textContent = reference.title; line.append(link); answer.append(line);
+              }
             }
           }
           answer.dataset.loaded = "true";

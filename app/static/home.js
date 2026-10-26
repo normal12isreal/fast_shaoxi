@@ -22,7 +22,12 @@ document.getElementById("ask-form").addEventListener("submit", async event => {
       const details = document.createElement("details");
       const title = document.createElement("summary"); title.textContent = `${source.label} · PDF 页码 ${source.pdf_pages.join("、") || "无"}`;
       const text = document.createElement("p"); text.className = "plain-text"; text.textContent = source.text;
-      details.append(title, text); sources.append(details);
+      details.append(title, text);
+      for (const reference of source.web_sources || []) {
+        const link = document.createElement("a"); link.href = reference.url; link.textContent = reference.title;
+        const line = document.createElement("p"); line.append(link); details.append(line);
+      }
+      sources.append(details);
     }
     showStatus("ask-status", `已完成 · 请求编号 ${data.request_id}`);
   } catch (error) {

@@ -5,5 +5,5 @@ router = APIRouter(tags=["health"])
 
 @router.get("/health")
 def health() -> dict[str, str]:
-    """Report process liveness; database readiness is a future concern."""
+    """进程存活检查；不代表外部模型或数据库业务调用已经就绪。"""
     return {"status": "ok"}

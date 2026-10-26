@@ -87,3 +87,10 @@ def test_failed_record_is_explicit(client, monkeypatch):
     assert detail["status"] == "failed"
     assert detail["result"] is None
     assert "secret" not in str(detail)
+
+
+def test_https_cookie_configuration(client, monkeypatch):
+    credentials = login(client)
+    monkeypatch.setenv("COOKIE_SECURE", "true")
+    response = client.post("/api/auth/login", json=credentials)
+    assert "; secure" in response.headers["set-cookie"].lower()
