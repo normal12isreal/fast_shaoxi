@@ -14,7 +14,7 @@ async function loadRecords() {
         if (!details.open || answer.dataset.loaded) return;
         try {
           const record = await api(`/api/rag/records/${item.id}`);
-          answer.textContent = record.result ? record.result.answer : `处理状态：${record.status}`;
+          answer.textContent = record.result ? record.result.answer : `处理状态：${record.status}。${record.error || ""}`;
           if (record.result) {
             for (const source of record.result.sources) {
               const paragraph = document.createElement("p");

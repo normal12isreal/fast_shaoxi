@@ -18,9 +18,14 @@
 ## 当前施工阶段
 
 首页 `/`、安装教程 `/guide`、登录 `/login`、注册 `/register`、个人中心 `/account`
-已建立，公开问答已接通；账号和助手按顺序接入，未接通的功能在页面明确标示。
+已建立，公开问答、注册登录和个人记录已接通；安装助手尚在施工。
 原项目默认位于同级 `student-handbook-rag`，其他位置通过 `RAG_PROJECT_DIR` 指定。
 教程与首页读取原项目公开 README，安装补充资料在 `knowledge/installation.md`。
+
+可复制 `.env.example` 为 `.env` 调整配置，`scripts/dev.ps1` 会读取它。
+首次启动自动创建 `data/site.sqlite3` 并应用迁移。账号采用用户名和密码，不接邮箱。
+登录后首页问答才保存到个人记录；匿名请求不保存问答历史。
+数据库和密码哈希不进入 Git，详见 [数据库说明](docs/database.md)。
 
 公开 `POST /api/rag/ask` 只接收 `{"question":"申请国家奖学金需要满足哪些条件？"}`，
 不需要账号或 API Key。调用前需要原 RAG 已配置索引和模型凭据；网站不安装或重建它们。

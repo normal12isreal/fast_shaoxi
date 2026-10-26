@@ -37,12 +37,12 @@ def authentication(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="auth.html",
-        context={"register": request.url.path == "/register", "auth_enabled": False},
+        context={"register": request.url.path == "/register", "auth_enabled": True},
     )
 
 
 @router.get("/account", response_class=HTMLResponse)
 def account(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
-        request=request, name="account.html", context={"auth_enabled": False}
+        request=request, name="account.html", context={"auth_enabled": True}
     )

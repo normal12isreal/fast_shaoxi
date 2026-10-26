@@ -36,12 +36,22 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
   使用 [HTTPX2](https://starlette.dev/testclient/)。
 - Ruff：基础代码检查与格式化。
 
-数据库阶段再按需求添加 SQLAlchemy、Alembic 和相应驱动，当前不安装远程数据库服务。
+- Markdown-it：安全渲染公开 README，禁用原始 HTML。
+- SQLAlchemy、Alembic：SQLite ORM 与表结构迁移，不安装远程数据库服务。
+- pwdlib 与 Argon2：密码哈希与验证。
 
-## 当前不需要配置文件
+## 应用配置
 
-直接启动即可，应用不读取 `.env`。模板练习通过 `/demo?name=小明` 接收参数，
-无需为了传入一个名字增加环境变量或配置类。
+页面和本地账号可直接启动；RAG 查询需要原项目已有数据和模型凭据。
+复制根 `.env.example` 为 `.env` 后，`scripts/dev.ps1` 通过 uv 加载。
+直接运行 uvicorn、迁移脚本时须自行设置环境变量或使用 uv 的 `--env-file .env`。
+测试使用临时数据库和模拟模型，不读取个人 `.env`。
+
+`RAG_PROJECT_DIR` 默认同级 `student-handbook-rag`；网站只引用原代码和数据。
+`DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL` 可覆盖原 RAG 的私有本地凭据。
+真实密钥只放本机环境或被忽略的 `.env`，不放教程、聊天或 Git。
+`HANDBOOK_DATABASE_PATH` 默认 `data/site.sqlite3`，`COOKIE_SECURE=true` 用于 HTTPS。
+助手独立模型名称由 `ASSISTANT_MODEL` 指定，默认 `qwen3.7-plus`。
 
 ## 日常安装与恢复
 

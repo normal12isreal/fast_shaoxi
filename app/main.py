@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
+from app.db.core import Database
 from app.pages.routes import router as page_router
 from app.services.rag import RAGService
 
@@ -16,9 +17,15 @@ APP_DIR = Path(__file__).resolve().parent
 @asynccontextmanager
 async def lifespan(application: FastAPI):
     # 生命周期只管理实际资源；不引入配置工厂。原 RAG 首次提问时才加载。
+    application.state.db = Database()
+    application.state.db.migrate()
+    application.state.db.recover_interrupted()
     application.state.rag = RAGService()
-    yield
-    application.state.rag.pool.close()
+    try:
+        yield
+    finally:
+        application.state.rag.pool.close()
+        application.state.db.close()
 
 
 app = FastAPI(lifespan=lifespan)

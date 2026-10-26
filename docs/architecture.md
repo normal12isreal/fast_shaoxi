@@ -1,51 +1,38 @@
-# 代码职责与扩展方向
+# 代码职责与阅读顺序
 
-## 当前结构
+先读 `app/main.py` 看装配，再按需要进入某条调用链，不必一次看完所有文件。
 
 ```text
 app/
-  main.py              创建 FastAPI 应用、装配路由
-  api/router.py        汇总 HTTP 路由
-  api/routes/          health 与学习示例
-  schemas/             请求与响应模型
-  pages/routes.py      页面 URL → 模板、直接 HTML 或下载响应
-  templates/           Jinja2 模板，接收 Python 传入的页面数据
-  static/              浏览器端 JavaScript、CSS、SVG 占位图片
-  resources/           由指定下载路由提供的文件，不挂载到静态目录
-tests/                 对外行为测试
-scripts/               本地工具与开发启动
-docs/                  环境、架构、学习及服务器说明
+  main.py                 直接创建 FastAPI，生命周期管理实际资源
+  pages/routes.py         页面 URL → Jinja2 模板
+  templates/              首页、安装教程、账号、个人中心
+  static/                 浏览器提交表单、显示结果和样式
+  api/router.py           汇总 JSON 路由
+  api/routes/             health、auth、rag，助手在下一阶段接通
+  schemas/                HTTP 输入输出与约束
+  services/
+    knowledge.py          页面与助手共用的公开资料白名单
+    execution.py          线程池、执行名额和 HTTP 等待上限
+    rag.py                原 RAG 包引用、数据目录引用和单次调用
+    auth.py               密码、会话身份和同源校验
+    records.py            登录用户问答记录的短事务
+  db/                     SQLite 连接与 ORM 模型
+migrations/               可重复执行的数据库版本演进
+knowledge/                安装补充资料，不存模型密钥
+tests/                    临时数据库、模拟模型和对外行为验证
+scripts/                  项目内工具、启动、迁移与外部调用示例
 ```
 
-请求流向是：Uvicorn 接收 HTTP → FastAPI 找到路由 → Pydantic 校验输入 →
-路由调用处理函数 → 响应模型约束输出 → 返回 JSON。
-例如 `POST /examples/echo` 的输入输出在 `app/schemas/examples.py`，处理在
-`app/api/routes/examples.py`。字符串长度按 Python `len` 计算。
+页面加载与提问是两次独立请求：`GET /` → 页面模板；
+`static/home.js` 提交 `POST /api/rag/ask` → schema 校验 → RAG service
+→ 工作线程执行原 `HandbookRAG.ask()` → 响应模型过滤 → JSON → 页面。
+注册登录由 `api/routes/auth.py` 接收 HTTP，`services/auth.py` 提供可复用身份校验。
+个人记录只能按当前用户查询，数据库事务不跨模型等待。
 
-`main.py` 直接用 `app = FastAPI()` 创建应用，然后注册路由与静态目录。
-当前没有配置层、应用工厂或持久化数据；测试直接使用这个 app。
-模板练习用 `/demo?name=小明` 展示查询参数 → 函数参数 → 模板变量的关系。
+`main.py` 保留直接创建应用，没有应用工厂或配置类。
+`app.state` 只持有需要生命周期的数据库、RAG 及后续助手资源。
+services 按实际规则拆分，不强制一张表一个 repository，也不逐层重复转发。
 
-页面、资源与 API 是独立请求。调用映射及阅读顺序见 [网页响应练习](web-demo.md)。
-当前只使用 echo 演示数据传输，尚未对接外部 RAG 包。
-
-## 有需求时再增加的模块
-
-| 实际出现的职责 | 建议位置 | 边界 |
-|---|---|---|
-| 业务规则、多个接口共享的业务操作 | `app/services/` | 不处理 HTTP Request/Response |
-| SQLAlchemy engine、会话及 ORM 模型 | `app/db/` | 管理持久化资源和表映射 |
-| 数据库版本演进 | `migrations/` | Alembic 迁移；不在路由中临时建表 |
-| 多个业务流程需要复用的数据库查询 | `app/repositories/` | 真正需要复用时引入，不强制一表一层 |
-| 部署配置 | `deploy/` | 学到服务器阶段再引入 |
-
-路由负责 HTTP 参数、状态码和调用；service 负责规则；数据库模块负责持久化。
-ORM 模型与 HTTP schema 各自维护边界，不把数据库内部字段直接作为对外响应。
-先保持简单的同步处理；学习异步时说明阻塞 I/O 与异步驱动的区别，再决定是否迁移。
-
-## 变更时维护什么
-
-新增接口时更新路由、必要 schema 与行为测试；只有导航或模块责任变化才改本文。
-真正需要配置时再添加，并同步环境说明；不要为演示页面标题引入配置模块。
-新增模块时提供简短职责说明，只有出现新的维护边界才增加局部 `AGENTS.md`。
-不为了目录齐全预建空的 service、repository、数据库或部署框架。
+新增接口维护路由、schema 和必要测试；新增配置同步环境说明。
+只有实际职责边界变化才补文档导航。部署配置等后续学到服务器阶段再加。
