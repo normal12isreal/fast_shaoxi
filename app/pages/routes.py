@@ -20,7 +20,7 @@ def home(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={**page_knowledge(), "rag_enabled": False},
+        context={**page_knowledge(), "rag_enabled": True},
     )
 
 

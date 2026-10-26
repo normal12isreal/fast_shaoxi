@@ -1,5 +1,6 @@
 """应用入口；Uvicorn 通过 app.main:app 找到下面的 app 对象。"""
 
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -7,9 +8,20 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
 from app.pages.routes import router as page_router
+from app.services.rag import RAGService
 
 APP_DIR = Path(__file__).resolve().parent
-app = FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    # 生命周期只管理实际资源；不引入配置工厂。原 RAG 首次提问时才加载。
+    application.state.rag = RAGService()
+    yield
+    application.state.rag.pool.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 # API 注册：api/router.py → 各主题 JSON 路由。

@@ -7,7 +7,15 @@ FastAPI 描述“请求进来后如何处理”，Uvicorn 负责监听端口、�
 中的 Python 文件后自动重载。终端关闭或按 `Ctrl+C` 后服务停止。
 
 `127.0.0.1` 表示本机；`8000` 是端口，不是数据库。
-`/health` 目前只表示应用进程能处理请求，不能说明未来数据库或外部服务已经就绪。
+`/health` 只表示应用进程能处理请求，不能说明数据库或外部服务已经就绪。
+
+当前必须保持单进程，不增加 Uvicorn workers。RAG 执行限额在本进程内；
+阻塞计算在线程中运行，健康检查和页面无需等它完成。
+网站问答等待 180 秒，浏览器和外部示例为 210 秒。未来 Nginx 的
+`proxy_read_timeout` 至少设为 210 秒；keep-alive 不是问答执行超时。
+HTTP 超时无法杀死 Python 线程，执行名额等真实调用结束才释放。
+依据：[Nginx](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout)、
+[Uvicorn](https://uvicorn.dev/settings/)。
 
 端口冲突时可改用：
 
