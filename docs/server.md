@@ -27,7 +27,8 @@ HTTP 超时无法杀死 Python 线程，执行名额等真实调用结束才释�
 
 ## Docker 实验镜像
 
-根目录的 `Dockerfile` 已准备好打包配置，目前尚未构建、运行或部署验证。
+根目录的 `Dockerfile` 已在本机 Docker Desktop 完成构建和启动检查，尚未部署到 AWS。
+本地检查覆盖页面、健康接口、SQLite 完整性、RAG 导入及索引文件存在性；未调用付费模型验证回答。
 依赖安装方式参考 [uv 官方 Docker 说明](https://docs.astral.sh/uv/guides/integration/docker/)。
 
 - 使用 Python 3.13，在镜像内按 `uv.lock` 创建 Linux `.venv`，不复制 Windows 虚拟环境。
@@ -40,7 +41,7 @@ HTTP 超时无法杀死 Python 线程，执行名额等真实调用结束才释�
   模型凭据由运行环境提供 `DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL`，不嵌入镜像。
 - 启动命令监听 `0.0.0.0:8000`，关闭 `--reload`，明确只启用一个 worker。
 
-以下命令供审阅后手动执行，创建这些文件不代表已执行构建或启动：
+以下是在本机构建和启动的命令；Docker Desktop 需要处于 Linux 容器模式：
 
 ```powershell
 # 在项目根目录构建，目标对应当前 AWS x86_64 实例。
@@ -48,13 +49,18 @@ docker build --platform linux/amd64 -t fastapi-rag:trial .
 
 # 先复制 .env.example 为 .env 并填写百炼的两个环境变量。
 # 不要将本机 Windows 数据库或 RAG 绝对路径写进这个容器环境文件。
-docker run -d --name fastapi-rag --env-file .env -p 80:8000 fastapi-rag:trial
+docker run -d --name fastapi-rag --env-file .env -p 127.0.0.1:8000:8000 fastapi-rag:trial
 ```
 
-`EXPOSE 8000` 不会自动发布端口；`-p 80:8000` 才把宿主机 80 端口转到容器 8000。
-本机测试时访问 `http://127.0.0.1/health`；远程运行时用服务器公网地址替换本机地址，
-并让 AWS 安全组允许 TCP 80。该命令在执行它的电脑运行容器，不会自动上传或部署到 AWS。
+`EXPOSE 8000` 不会自动发布端口；上述映射只允许本机访问 `http://127.0.0.1:8000/`，
+健康检查地址为 `http://127.0.0.1:8000/health`。在 AWS 上对外提供 HTTP 时，
+可改用 `-p 80:8000` 并让安全组允许 TCP 80，再通过服务器公网地址访问。
+该命令在执行它的电脑运行容器，不会自动上传或部署到 AWS。
 当前只有 Dockerfile，没有 Compose、反向代理或 HTTPS 配置。
+
+同名容器已经创建后，用 `docker start fastapi-rag` 再次启动，
+用 `docker stop fastapi-rag` 停止，用 `docker logs --tail 50 fastapi-rag` 查看日志。
+不要重复执行同名 `docker run`；它会报容器名称已被占用。
 
 ## 后续部署时逐项补齐
 
