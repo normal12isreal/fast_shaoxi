@@ -15,11 +15,11 @@
 
 ### 1. 配置自己的 API Key
 
-下载 [docker.env.example](docker.env.example)，复制并改名为 `docker.env`，填写自己的阿里云百炼（DashScope）API Key：
+下载 [docker.env.example](docker.env.example)，复制并改名为 `docker.env`，填写自己的 API Key 和对应的 API 访问地址：
 
 ```dotenv
 DASHSCOPE_API_KEY=替换为你自己的API_Key
-DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+DASHSCOPE_BASE_URL=替换为兼容当前项目的HTTPS_API基础地址
 COOKIE_SECURE=false
 ```
 
@@ -31,7 +31,7 @@ Copy-Item docker.env.example docker.env
 
 Linux/macOS 对应为 `cp docker.env.example docker.env`。然后使用文本编辑器修改 `docker.env`。
 
-Key 必须与上面的百炼服务地址匹配，并能调用项目配置的文本生成、Embedding 和 Rerank 模型；模型配置位于 [rag/config/](rag/config/)。模型调用费用由该 Key 的持有者承担。
+以上变量名沿用当前程序的配置项。Key 必须与填写的 API 访问地址匹配，并能调用项目配置的文本生成、Embedding 和 Rerank 模型。当前版本会校验访问地址及模型，并非任意 API 都可直接使用；地址校验见 [embedding_api.py](rag/scripts/embedding_api.py)，模型配置位于 [rag/config/](rag/config/)。模型调用费用由该 Key 的持有者承担。
 
 镜像不包含维护者的 API Key、现有账号数据库或问答历史。`docker.env` 留在运行者自己的电脑上，不要上传 GitHub；仓库已经忽略这个文件。启动时直接读取配置，不弹出输入窗口。
 
