@@ -10,7 +10,7 @@
 | 一项改动该放在哪个模块 | [架构职责](architecture.md) | `app/`、`tests/` |
 | 用户数据、会话、表结构与迁移 | [数据库说明](database.md) | `app/db/`、`migrations/` |
 | 先学什么、下一步做到什么程度 | [学习路线](learning.md) | 当前阶段对应的练习代码 |
-| Uvicorn、端口、服务器与后续部署 | [服务器说明](server.md) | `scripts/dev.ps1` |
+| Uvicorn、端口、Docker 实验镜像与后续部署 | [服务器说明](server.md) | `scripts/dev.ps1`、`Dockerfile`、`.dockerignore` |
 | Agent 进入项目后怎样维护 | [根 AGENTS.md](../AGENTS.md) | 各职责目录的 `AGENTS.md` |
 
 HTTP 接口的准确字段和响应以运行中的 `/docs` 与 schema 代码为准，文档不再复制一份契约。

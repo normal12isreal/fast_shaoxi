@@ -58,6 +58,7 @@
 - [网站调用关系](docs/website.md)：页面、JSON 接口和处理模块。
 - [架构阅读顺序](docs/architecture.md)：从入口沿一条请求往下看。
 - [环境说明](docs/setup.md)：项目内工具与依赖。
+- [服务器说明](docs/server.md)：监听地址、端口与 Docker 实验镜像配置。
 - [Agent 导航](AGENTS.md)：维护职责。
 
 本轮只在本地开发，不推送、不部署。

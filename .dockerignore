@@ -1,0 +1,25 @@
+# 只发送镜像运行所需文件，排除 Windows 环境、工具、Git、测试和本机 .env。
+**
+!pyproject.toml
+!uv.lock
+!README.md
+!app/
+!app/**
+!migrations/
+!migrations/**
+!knowledge/
+!knowledge/**
+!rag/
+!rag/**
+!data/
+!data/**
+
+# API 凭据和可重新生成的查询缓存不写入镜像。
+rag/.runtime/
+**/__pycache__/
+**/*.py[cod]
+**/*.pem
+**/*.key
+
+# 保留 SQLite 主文件及 WAL；跨平台的共享内存辅助文件由 SQLite 重建。
+data/*-shm
