@@ -61,4 +61,4 @@
 - [服务器说明](docs/server.md)：监听地址、端口与 Docker 实验镜像配置。
 - [Agent 导航](AGENTS.md)：维护职责。
 
-本轮只在本地开发，不推送、不部署。
+AWS 实验部署的当前地址和容器操作见 [服务器说明](docs/server.md#当前-aws-实验部署)。

@@ -1,0 +1,7 @@
+# This server is loaded only for this trusted project.
+[mcp_servers.aws-mcp]
+command = "powershell.exe"
+args = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", 'D:\all_try\codex_try\fast_api\scripts\aws.ps1', "-Mcp"]
+cwd = 'D:\all_try\codex_try\fast_api'
+startup_timeout_sec = 120
+tool_timeout_sec = 300

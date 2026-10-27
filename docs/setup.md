@@ -75,3 +75,37 @@ Python 来自 uv 使用的 [python-build-standalone 发行版](https://docs.astr
 不要使用系统 `pip install` 或 `--system`。通常不需要手动激活虚拟环境。
 新机器上直接执行根 README 的 bootstrap；它会校验 uv 下载内容并按锁文件恢复。
 升级 Python 或依赖时显式更新版本与锁文件，运行测试后一起提交，不在启动时自动升级。
+
+## AWS 项目专用工具
+
+AWS 接入遵循 [Agent Toolkit 安装说明](https://github.com/aws/agent-toolkit-for-aws/blob/main/setup-instructions/setup.md)，
+但不运行会改写用户级 AI 工具配置的 `aws configure agent-toolkit` 向导。
+仅在本项目 `.codex/config.toml` 注册 `aws-mcp`，不安装全局 AWS 插件或技能。
+Codex 需要信任此项目；重新加载本项目会话后加载新增 MCP。其他项目不会继承这里的 AWS 配置。
+已验证当前会话中的 AWS MCP 可完成身份查询、实例查询和安全组查询。
+
+本机已将经过 Amazon 签名校验的 AWS CLI 2.38.6 从官方 Windows MSI 解压到 `.tools/aws-cli/`，
+没有运行系统安装器。MCP 使用官方 `mcp-proxy-for-aws-cli==1.7.0`，由 `scripts/uv.ps1`
+在项目工具环境中运行，不加入网站的 Python 依赖或 Docker 镜像。
+工具和缓存不进入 Git；新机器须重新下载官方 CLI，并下载
+[AWS 新体验规则](https://raw.githubusercontent.com/aws/agent-toolkit-for-aws/refs/heads/main/rules/aws-starter-rules.md)
+到 `.tools/aws-setup/aws-starter-rules.md`。MCP 配置使用当前项目绝对路径，移动目录后须更新。
+
+统一从项目根运行：
+
+```powershell
+.\scripts\aws.ps1 --version
+.\scripts\aws.ps1 login --region us-east-2 --profile fastapi-aws
+.\scripts\aws.ps1 sts get-caller-identity
+```
+
+登录由用户在浏览器完成，不把密码、访问密钥或授权码写进聊天和 Git。
+profile 为 `fastapi-aws`；配置、凭据与登录缓存全部放在被忽略的 `.tools/aws-state/`。
+本项目使用全新 AWS Experience，资源区域固定为 `us-east-2`；Toolkit 服务和 MCP 签名区域
+使用 `us-east-1`，MCP 的资源区域元数据仍为 `us-east-2`。
+
+`scripts/aws.ps1` 仅为其子进程启用 `http://127.0.0.1:7890` HTTP/HTTPS 代理，
+本机回调地址绕过代理，退出后恢复环境。若代理端口改变，只需修改该脚本。
+本配置不更改 SSH 连接或 VPN 设置。凭据到期时重新执行上述 login 命令。
+以后若增加另一个 AWS 项目，先以新 profile 登录，再显式调整允许的
+`AWS_MCP_PROXY_PROFILES`；当前仅允许 `fastapi-aws`。

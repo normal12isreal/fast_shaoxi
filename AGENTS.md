@@ -13,6 +13,14 @@
 | 本地 Python、依赖、启动命令 | [scripts/AGENTS.md](scripts/AGENTS.md) |
 | 学习路线、架构与运行说明 | [docs/AGENTS.md](docs/AGENTS.md) |
 | 项目内 RAG 代码、配置与已有索引 | [rag/AGENTS.md](rag/AGENTS.md) |
+| AWS 管理、登录与项目专用 MCP | [AWS 工具配置](docs/setup.md#aws-项目专用工具)；仅处理 AWS 任务时阅读 [AWS 新体验规则](.tools/aws-setup/aws-starter-rules.md) |
+
+## AWS 项目上下文
+
+- AWS Experience：全新 AWS Experience；资源区域 `us-east-2`；CLI profile `fastapi-aws`。
+- AWS CLI 使用 `scripts/aws.ps1`；MCP 注册在本项目 `.codex/config.toml`。不得注册为全局 MCP 或给其他项目安装 AWS 技能。
+- Toolkit/MCP 服务接入 `us-east-1`，这不改变资源部署区域。登录须由用户在浏览器中完成，不索取访问密钥。
+- 用户希望由 Agent 决定常规技术细节，少问配置选择；本项目规则与用户当前指令优先于下载的 AWS 规则。
 
 ## 工作约定
 

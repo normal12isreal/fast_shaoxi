@@ -27,8 +27,9 @@ HTTP 超时无法杀死 Python 线程，执行名额等真实调用结束才释�
 
 ## Docker 实验镜像
 
-根目录的 `Dockerfile` 已在本机 Docker Desktop 完成构建和启动检查，尚未部署到 AWS。
-本地检查覆盖页面、健康接口、SQLite 完整性、RAG 导入及索引文件存在性；未调用付费模型验证回答。
+根目录的 `Dockerfile` 已在本机 Docker Desktop 完成构建和启动检查，并部署到 AWS。
+本地检查覆盖页面、健康接口、SQLite 完整性、RAG 导入及索引文件存在性；
+远端额外完成了一次真实 RAG 提问，返回 HTTP 200。
 依赖安装方式参考 [uv 官方 Docker 说明](https://docs.astral.sh/uv/guides/integration/docker/)。
 
 - 使用 Python 3.13，在镜像内按 `uv.lock` 创建 Linux `.venv`，不复制 Windows 虚拟环境。
@@ -62,7 +63,36 @@ docker run -d --name fastapi-rag --env-file .env -p 127.0.0.1:8000:8000 fastapi-
 用 `docker stop fastapi-rag` 停止，用 `docker logs --tail 50 fastapi-rag` 查看日志。
 不要重复执行同名 `docker run`；它会报容器名称已被占用。
 
-## 后续部署时逐项补齐
+## 当前 AWS 实验部署
+
+实例 `normal_sc_ray` 位于 `us-east-2`，公网地址为 <http://18.220.233.65/>。
+镜像使用 Docker Hub 私有仓库 `normal12isreal/fastapi-rag:latest`。
+当前容器名为 `fastapi-rag`，将服务器 `80` 映射到容器 `8000`，
+设置 `--restart unless-stopped`，Docker 服务随系统启动。
+容器日志最多保留 3 个 10 MB 文件。
+
+模型凭据保存在服务器 `/home/ubuntu/fastapi-rag/dashscope.local.json`，权限为 `600`，
+只读挂载到 `/app/rag/.runtime/dashscope.local.json`。
+拉取镜像使用的临时 Docker Hub 登录配置已在拉取结束后清理，不放入镜像或 Git。
+数据库按实验要求仍保存在容器内，删除、重建容器前需要自行保留想要的数据。
+
+实例实际关联安全组为 `launch-wizard-1`（`sg-0903f77d85c7b21dc`）。
+网页曾经超时的原因是该组只有 SSH 22 入站；补上 HTTP TCP 80、来源 `0.0.0.0/0` 后，
+已从本机外网验证 `/`、`/api-docs`、`/health` 返回 HTTP 200。
+当前使用 HTTP；尚未配置域名和 HTTPS。
+
+在服务器终端查看和控制容器：
+
+```bash
+docker ps --filter name=fastapi-rag
+docker logs --tail 50 fastapi-rag
+docker stop fastapi-rag
+docker start fastapi-rag
+```
+
+AWS 管理工具和登录方式见 [项目专用 AWS 工具](setup.md#aws-项目专用工具)。
+
+## 后续正式部署时按需补齐
 
 1. Linux 上重建项目环境，使用锁定依赖；Windows 虚拟环境不能直接复制过去。
 2. 正式运行移除 `--reload`，将应用作为进程交给 systemd 或容器管理。
@@ -70,4 +100,4 @@ docker run -d --name fastapi-rag --env-file .env -p 127.0.0.1:8000:8000 fastapi-
 4. 通过环境变量提供数据库连接与凭据，保存日志，验证重启与备份恢复。
 5. 需要时区分存活检查与包含数据库连接的就绪检查。
 
-当前 `scripts/dev.ps1` 仍是本机开发入口；实际上传、部署和远程运行另行执行。
+`scripts/dev.ps1` 仍是本机开发入口；修改代码不会自动更新远端容器，需要重新构建、上传并部署。
