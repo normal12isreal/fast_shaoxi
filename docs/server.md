@@ -34,10 +34,9 @@ HTTP 超时无法杀死 Python 线程，执行名额等真实调用结束才释�
 
 - 使用 Python 3.13，在镜像内按 `uv.lock` 创建 Linux `.venv`，不复制 Windows 虚拟环境。
 - 将网站代码、模板、静态资源、数据库迁移、`knowledge/` 和 `rag/` 的已有索引一起复制。
-- 按当前实验需求，将本地 `data/` 数据库一起放入镜像，不声明外部数据卷。
-  新容器从构建时的数据副本开始；后续修改写在当前容器内，删除容器会丢失这些修改。
-  构建前先停止本地开发服务，避免在数据库写入期间复制；包含已有 WAL，排除可重建的 SHM。
-  从没有 `data/` 的源码构建也可以，应用启动时自动创建数据库。
+- 当前公开分发镜像排除整个 `data/`，不携带维护者的账号、密码哈希和问答历史。
+  应用首次启动自动创建空数据库；后续修改写在当前容器内，删除容器会丢失这些修改。
+  之前上传 Docker Hub 并部署到 AWS 的实验镜像包含当时的数据库副本，不作为公开分发包。
 - `.dockerignore` 排除本机工具、虚拟环境、Git、测试、`.env` 和 `rag/.runtime/`。
   模型凭据由运行环境提供 `DASHSCOPE_API_KEY`、`DASHSCOPE_BASE_URL`，不嵌入镜像。
 - 启动命令监听 `0.0.0.0:8000`，关闭 `--reload`，明确只启用一个 worker。
@@ -58,6 +57,11 @@ docker run -d --name fastapi-rag --env-file .env -p 127.0.0.1:8000:8000 fastapi-
 可改用 `-p 80:8000` 并让安全组允许 TCP 80，再通过服务器公网地址访问。
 该命令在执行它的电脑运行容器，不会自动上传或部署到 AWS。
 当前只有 Dockerfile，没有 Compose、反向代理或 HTTPS 配置。
+
+公开分发镜像在 [GitHub Releases](https://github.com/normal12isreal/fast_shaoxi/releases/latest)，
+文件为 `fast-shaoxi-linux-amd64.tar.gz`，加载后的标签是 `fast-shaoxi:latest`。
+使用者下载后按根 README 执行 `docker load`、配置 `docker.env` 并启动。
+`docker.env.example` 仅含占位值；真实 `docker.env` 排除 Git 和 Docker 构建上下文。
 
 同名容器已经创建后，用 `docker start fastapi-rag` 再次启动，
 用 `docker stop fastapi-rag` 停止，用 `docker logs --tail 50 fastapi-rag` 查看日志。

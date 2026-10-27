@@ -3,6 +3,7 @@
 !pyproject.toml
 !uv.lock
 !README.md
+!LICENSE
 !app/
 !app/**
 !migrations/
@@ -11,15 +12,19 @@
 !knowledge/**
 !rag/
 !rag/**
-!data/
-!data/**
 
 # API 凭据和可重新生成的查询缓存不写入镜像。
 rag/.runtime/
+**/.env
+**/.env.*
+**/docker.env
+**/*.db
+**/*.sqlite3
+**/*.sqlite3-*
 **/__pycache__/
 **/*.py[cod]
 **/*.pem
 **/*.key
 
-# 保留 SQLite 主文件及 WAL；跨平台的共享内存辅助文件由 SQLite 重建。
-data/*-shm
+# 每位使用者从空数据库开始；本机账号和历史记录不随镜像分发。
+data/

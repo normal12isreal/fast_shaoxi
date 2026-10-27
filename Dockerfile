@@ -1,13 +1,16 @@
 # syntax=docker/dockerfile:1
 
-# 本地实验镜像：网站、RAG 代码、已有索引和 data/ 数据库一起打包。
-# 构建前先停止本地开发服务，避免复制仍在写入的 SQLite 数据库。
+# 分发镜像：只包含网站、RAG 代码和已有索引，不携带本机数据库或凭据。
 FROM python:3.13-slim-trixie
 
 # 与 scripts/toolchain.json 中的 uv 版本保持一致。
 COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
 
 WORKDIR /app
+
+LABEL org.opencontainers.image.source="https://github.com/normal12isreal/fast_shaoxi" \
+    org.opencontainers.image.description="绍兴大学学生手册 RAG 网站与 FastAPI 接口" \
+    org.opencontainers.image.licenses="MIT"
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -21,8 +24,7 @@ ENV PYTHONUNBUFFERED=1 \
 COPY pyproject.toml uv.lock README.md ./
 RUN uv sync --locked --no-dev --no-cache --python /usr/local/bin/python
 
-# .dockerignore 限定复制范围；data/ 包含现有 SQLite 主文件及可能存在的 WAL。
-# 没有本地数据库时，应用首次启动会自动创建数据库并执行迁移。
+# .dockerignore 排除所有本机数据；应用首次启动自动创建空数据库并执行迁移。
 COPY . .
 RUN mkdir -p /app/data /app/rag/.runtime
 
